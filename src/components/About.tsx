@@ -25,7 +25,7 @@ export function About() {
         }
       }, 100);
       return () => clearInterval(id);
-    }, 7000); // wait 7s before typing starts
+    }, 6000); // wait 7s before typing starts
 
     return () => clearTimeout(timeout);
   }, [headerVisible]);
@@ -49,14 +49,14 @@ export function About() {
       {/* Floating Card (fades in only after header typing) */}
       {headerDone && (
         <motion.div
-          className="relative flex max-w-5xl flex-col items-center gap-8 rounded-2xl 
-                     border border-blue-400 
-                     bg-gradient-to-br from-white via-blue-50 to-blue-100 
-                     p-8 shadow-xl backdrop-blur-md
-                     dark:border-blue-500 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 2, ease: "easeOut" }}
+  className="relative flex max-w-3xl flex-col items-center gap-6 rounded-3xl 
+             border border-blue-400 bg-gradient-to-br from-white via-blue-50 to-blue-100 
+             p-8 shadow-xl backdrop-blur-md
+             dark:border-blue-500 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900 
+             transition-transform duration-500 hover:scale-[1.02] hover:shadow-[0_0_35px_rgba(96,165,250,0.9)]"
+  initial={{ opacity: 0, y: 40 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 1.5, ease: "easeOut" }}
           whileHover={{
             y: -6,
             boxShadow: "0 0 30px rgba(96,165,250,0.9)",
@@ -72,7 +72,7 @@ export function About() {
           />
 
           {/* About Me Text */}
-          <p className="mt-6 max-w-2xl text-center text-xl font-light leading-relaxed tracking-wide text-gray-300 font-inter">
+          <p className="mt-6 max-w-2xl text-center text-xl  leading-relaxed tracking-wide text-gray-300 font-inter">
             Hi, I’m Vishruth, a CS major at Georgia Tech with a FinTech minor,
             originally from Arizona. For me, CS is where structure meets freedom,
              it pushes me to think with precision while giving me the space to
