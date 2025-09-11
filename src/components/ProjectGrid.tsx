@@ -24,6 +24,7 @@ const projects = [
       "A statistical arbitrage project using volatility skew and VIX term structure to forecast SPY returns. Combined rule-based signals with logistic regression in a volatility-targeted framework.",
     skills: ["Python", "Pandas", "Scikit-learn", "Quant Finance"],
     link: "https://github.com/vishruthanand08/iv-skew-trading-strategy",
+    paper: "/spy.pdf",
   },
   {
     title: "The Walk of Fire",
@@ -140,7 +141,7 @@ export default function ProjectsGrid() {
                       href={project.paper}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-lg font-semibold text-purple-400 hover:text-purple-200 transition"
+                      className="text-lg font-semibold text-blue-400 hover:text-blue-200 transition"
                     >
                       View Paper →
                     </a>
@@ -193,7 +194,7 @@ export default function ProjectsGrid() {
                       href={project.paper}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="text-lg font-semibold text-purple-400 hover:text-purple-200 transition"
+                      className="text-lg font-semibold text-blue-400 hover:text-blue-200 transition"
                     >
                       View Paper →
                     </a>
