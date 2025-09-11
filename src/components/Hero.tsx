@@ -1,8 +1,7 @@
 "use client";
 import Aurora from "./Aurora";
-
-
 import { useEffect, useState } from "react";
+import PillNav from "./PillNav";
 import { motion } from "framer-motion";
 
 const NAME = "Vishruth Anand";
@@ -12,6 +11,7 @@ export function Hero() {
   const [displayedName, setDisplayedName] = useState("");
   const [displayedTagline, setDisplayedTagline] = useState("");
   const [nameDone, setNameDone] = useState(false);
+  const [taglineDone, setTaglineDone] = useState(false); // NEW
 
   // --- Name typing ---
   useEffect(() => {
@@ -21,7 +21,7 @@ export function Hero() {
       i++;
       if (i === NAME.length) {
         clearInterval(id);
-        setTimeout(() => setNameDone(true), 300); // trigger effects
+        setTimeout(() => setNameDone(true), 300);
       }
     }, 80);
     return () => clearInterval(id);
@@ -34,10 +34,14 @@ export function Hero() {
     const id = setInterval(() => {
       setDisplayedTagline(TAGLINE.slice(0, i + 1));
       i++;
-      if (i === TAGLINE.length) clearInterval(id);
+      if (i === TAGLINE.length) {
+        clearInterval(id);
+        setTimeout(() => setTaglineDone(true), 2300); // ✅ wait a tiny bit after last char
+      }
     }, 50);
     return () => clearInterval(id);
   }, [nameDone]);
+
 
   return (
     <section className="relative flex h-screen flex-col items-center justify-center overflow-hidden px-6 text-center">
@@ -51,9 +55,8 @@ export function Hero() {
         />
       </div>
 
-      {/* Your Hero content */}
+      {/* Name */}
       <div className="relative inline-block z-10">
-        {/* Name typing with bounce + glitch */}
         <motion.h1
           className="mb-2 flex items-baseline justify-center text-4xl font-extrabold tracking-tight sm:text-6xl"
           animate={nameDone ? { y: [0, -10, 0] } : {}}
@@ -83,7 +86,7 @@ export function Hero() {
           })}
         </motion.h1>
 
-        {/* Gradient underline with shimmer */}
+        {/* Underline shimmer */}
         {nameDone && (
           <motion.div
             className="absolute bottom-0 left-0 right-0 h-1 origin-left rounded-full bg-gradient-to-r from-blue-400 via-purple-500 to-yellow-400"
@@ -101,7 +104,7 @@ export function Hero() {
         )}
       </div>
 
-      {/* Tagline typing */}
+      {/* Tagline */}
       {nameDone && (
         <h2 className="mt-6 text-lg font-medium text-blue-600 dark:text-blue-400 sm:text-2xl relative z-10">
           {displayedTagline.split("").map((char, i) => (
@@ -117,6 +120,26 @@ export function Hero() {
           ))}
         </h2>
       )}
+
+      {nameDone && taglineDone && (
+  <motion.div
+    className="mt-8 relative z-10"
+    initial={{ opacity: 0, y: 40 }}   // starts faded + below
+    animate={{ opacity: 1, y: 0 }}    // slides up + fades in
+    transition={{ duration: 1.5, ease: "easeOut" }}
+  >
+    <PillNav
+      items={[
+        { label: "Resume", href: "/resume.pdf" },
+        { label: "LinkedIn", href: "https://linkedin.com/in/YOUR" },
+        { label: "GitHub", href: "https://github.com/YOUR" },
+        { label: "Contact", href: "mailto:you@email.com" },
+      ]}
+      activeHref="/"
+    />
+  </motion.div>
+)}
+
     </section>
   );
 }
