@@ -25,7 +25,7 @@ export function About() {
         }
       }, 100);
       return () => clearInterval(id);
-    }, 6000); // wait 7s before typing starts
+    }, 6000); 
 
     return () => clearTimeout(timeout);
   }, [headerVisible]);
@@ -56,7 +56,7 @@ export function About() {
              transition-transform duration-500 hover:scale-[1.02] hover:shadow-[0_0_35px_rgba(96,165,250,0.9)]"
   initial={{ opacity: 0, y: 40 }}
   animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 1.5, ease: "easeOut" }}
+  transition={{ duration: 2.3, ease: "easeOut" }}
           whileHover={{
             y: -6,
             boxShadow: "0 0 30px rgba(96,165,250,0.9)",

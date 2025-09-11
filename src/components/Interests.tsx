@@ -9,11 +9,20 @@ export function Interests() {
   const [visible, setVisible] = useState(false);
   const [displayedHeader, setDisplayedHeader] = useState("");
 
-  // Delay section (10s after About Me)
+  // Delay section until Experience finishes
   useEffect(() => {
-    const timeout = setTimeout(() => setVisible(true), 10000);
-    return () => clearTimeout(timeout);
+    const handler = () => setVisible(true);
+    window.addEventListener("section:experience-ready", handler);
+
+    // fallback in case event doesn’t fire
+    const fallback = setTimeout(() => setVisible(true), 12000);
+
+    return () => {
+      window.removeEventListener("section:experience-ready", handler);
+      clearTimeout(fallback);
+    };
   }, []);
+
 
   // Typing animation for header
   useEffect(() => {
@@ -22,10 +31,21 @@ export function Interests() {
     const id = setInterval(() => {
       setDisplayedHeader(HEADER.slice(0, i + 1));
       i++;
-      if (i === HEADER.length) clearInterval(id);
+      if (i === HEADER.length) {
+        clearInterval(id);
+
+        //  Fire event once header typing finishes
+        setTimeout(() => {
+          window.dispatchEvent(new Event("section:interests-ready"));
+        }, 600); // buffer after typing
+      }
     }, 100);
     return () => clearInterval(id);
   }, [visible]);
+
+  
+  
+
 
   if (!visible) return null;
 

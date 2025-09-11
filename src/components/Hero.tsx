@@ -1,4 +1,6 @@
 "use client";
+import Aurora from "./Aurora";
+
 
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
@@ -39,7 +41,18 @@ export function Hero() {
 
   return (
     <section className="relative flex h-screen flex-col items-center justify-center overflow-hidden px-6 text-center">
-      <div className="relative inline-block">
+      {/* Aurora background */}
+      <div className="absolute inset-0 -z-10">
+        <Aurora
+          colorStops={["#3A29FF", "#7cff67", "#5227FF"]}
+          amplitude={1.0}
+          blend={0.5}
+          speed={0.5}
+        />
+      </div>
+
+      {/* Your Hero content */}
+      <div className="relative inline-block z-10">
         {/* Name typing with bounce + glitch */}
         <motion.h1
           className="mb-2 flex items-baseline justify-center text-4xl font-extrabold tracking-tight sm:text-6xl"
@@ -47,7 +60,7 @@ export function Hero() {
           transition={nameDone ? { duration: 0.5, ease: "easeOut" } : {}}
         >
           {displayedName.split("").map((char, i) => {
-            const isGlitchLetter = Math.random() < 0.12; // ~12% chance
+            const isGlitchLetter = Math.random() < 0.12;
             return (
               <span key={i} className="relative mx-[1px]">
                 <motion.span
@@ -90,7 +103,7 @@ export function Hero() {
 
       {/* Tagline typing */}
       {nameDone && (
-        <h2 className="mt-6 text-lg font-medium text-blue-600 dark:text-blue-400 sm:text-2xl">
+        <h2 className="mt-6 text-lg font-medium text-blue-600 dark:text-blue-400 sm:text-2xl relative z-10">
           {displayedTagline.split("").map((char, i) => (
             <motion.span
               key={i}
