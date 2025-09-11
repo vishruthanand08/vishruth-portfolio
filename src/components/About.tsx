@@ -48,12 +48,12 @@ export function About() {
 
       {/* Floating Card (fades in only after header typing) */}
       {headerDone && (
-        <motion.div
+  <motion.div
   className="relative flex max-w-3xl flex-col items-center gap-6 rounded-3xl 
-             border border-blue-400 bg-gradient-to-br from-white via-blue-50 to-blue-100 
+             border border-blue-500/30 bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-900 
              p-8 shadow-xl backdrop-blur-md
-             dark:border-blue-500 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900 
-             transition-transform duration-500 hover:scale-[1.02] hover:shadow-[0_0_35px_rgba(96,165,250,0.9)]"
+             transition-transform duration-500 hover:scale-[1.02] hover:shadow-[0_0_35px_rgba(96,165,250,0.6)]"
+
   initial={{ opacity: 0, y: 40 }}
   animate={{ opacity: 1, y: 0 }}
   transition={{ duration: 2.3, ease: "easeOut" }}

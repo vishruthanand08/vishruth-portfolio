@@ -66,18 +66,18 @@ export function Interests() {
 
       {/* Card */}
       <motion.div
-  className="flex w-full max-w-4xl flex-col items-center gap-8 rounded-3xl 
-             border border-blue-400 bg-gradient-to-br from-white via-blue-50 to-blue-100 
+  className="relative flex max-w-3xl flex-col items-center gap-6 rounded-3xl 
+             border border-blue-500/30 bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-900 
              p-8 shadow-xl backdrop-blur-md
-             dark:border-blue-500 dark:from-neutral-900 dark:via-neutral-800 dark:to-neutral-900
-             transition-transform duration-500 hover:scale-[1.02] hover:shadow-[0_0_35px_rgba(96,165,250,0.9)]"
+             transition-transform duration-500 hover:scale-[1.02] hover:shadow-[0_0_35px_rgba(96,165,250,0.6)]"
+
   initial={{ opacity: 0, y: 40 }}
   animate={{ opacity: 1, y: 0 }}
   transition={{ duration: 1.5, ease: "easeOut" }}
 >
 
         {/* Sentence */}
-        <p className="max-w-4xl text-center text-xl  leading-relaxed text-gray-700 dark:text-gray-200">
+        <p className="max-w-4xl text-center text-xl  leading-relaxed text-gray-100 dark:text-gray-500">
           Outside of CS, I stay active with lifting, basketball, pickleball, and hiking, and keep creative through Carnatic music, piano, and DJing.
         </p>
 
