@@ -12,13 +12,13 @@ export function Interests() {
   // Delay section until Experience finishes
   useEffect(() => {
     const handler = () => setVisible(true);
-    window.addEventListener("section:experience-ready", handler);
+    window.addEventListener("section:projects-ready", handler);
 
     // fallback in case event doesn’t fire
-    const fallback = setTimeout(() => setVisible(true), 12000);
+    const fallback = setTimeout(() => setVisible(true), 16000);
 
     return () => {
-      window.removeEventListener("section:experience-ready", handler);
+      window.removeEventListener("section:projects-ready", handler);
       clearTimeout(fallback);
     };
   }, []);

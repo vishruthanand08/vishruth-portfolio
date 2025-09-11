@@ -131,9 +131,9 @@ export function Hero() {
     <PillNav
       items={[
         { label: "Resume", href: "/resume.pdf" },
-        { label: "LinkedIn", href: "https://linkedin.com/in/YOUR" },
-        { label: "GitHub", href: "https://github.com/YOUR" },
-        { label: "Contact", href: "mailto:you@email.com" },
+        { label: "LinkedIn", href: "https://linkedin.com/in/vishruth-anand" },
+        { label: "GitHub", href: "https://github.com/vishruthanand08" },
+        { label: "Contact", href: "mailto:vanand64@gatech.edu" },
       ]}
       activeHref="/"
     />
