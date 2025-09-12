@@ -33,7 +33,8 @@ export function About() {
   return (
     <section
       id="about"
-      className="relative flex flex-col items-center justify-center px-6 -mt-40 pb-16 sm:px-12"
+      className="relative flex flex-col items-center justify-center px-6 pt-28 pb-16 sm:px-12 sm:pt-36"
+
     >
       {/* Typing Header */}
       <motion.h2

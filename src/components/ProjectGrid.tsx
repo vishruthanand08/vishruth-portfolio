@@ -156,7 +156,7 @@ export default function ProjectsGrid() {
           </div>
 
           {/* Bottom row (centered 2 cards) */}
-          <div className="flex justify-center gap-20 mt-10 w-full">
+          <div className="flex flex-col sm:flex-row justify-center gap-10 sm:gap-20 mt-10 w-full items-center">
             {projects.slice(3).map((project, i) => (
               <motion.div
                 key={i + 3}

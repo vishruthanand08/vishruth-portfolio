@@ -3,6 +3,7 @@
 import { motion, useMotionValue } from "framer-motion";
 import { useState, useEffect } from "react";
 
+
 interface CardRotateProps {
   children: React.ReactNode;
   onSendToBack: () => void;
@@ -57,6 +58,7 @@ export default function AdditionalExperience() {
   const [visible, setVisible] = useState(false);
   const [typedHeader, setTypedHeader] = useState("");
   const [showCards, setShowCards] = useState(false);
+  const isMobile = useIsMobile();
 
   useEffect(() => {
     const handler = () => setVisible(true);
@@ -247,14 +249,17 @@ export default function AdditionalExperience() {
             </CardRotate>
           ))}
 
-          <motion.p
-            className="absolute -bottom-16 sm:-bottom-12 text-gray-400 text-base sm:text-2xl italic"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ duration: 1.5, repeat: Infinity, repeatType: "reverse" }}
-          >
-            ↔ drag to explore
-          </motion.p>
+          {!isMobile && (
+            <motion.p
+              className="absolute -bottom-16 sm:-bottom-12 text-gray-400 text-base sm:text-2xl italic"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1.5, repeat: Infinity, repeatType: "reverse" }}
+            >
+              ↔ drag to explore
+            </motion.p>
+          )}
+
         </motion.div>
       )}
     </section>
