@@ -8,16 +8,16 @@ export function Interests() {
   const HEADER = "Interests";
   const [visible, setVisible] = useState(false);
   const [displayedHeader, setDisplayedHeader] = useState("");
+  const [showCard, setShowCard] = useState(false); // 👈 new state
 
   // Delay section until AdditionalExperience finishes
   useEffect(() => {
     const handler = () => {
-      setTimeout(() => setVisible(true), 800); // wait 1.5s after additional experience
+      setTimeout(() => setVisible(true), 500); 
     };
     window.addEventListener("section:additional-experience-ready", handler);
 
-    // fallback in case event doesn’t fire
-    const fallback = setTimeout(() => setVisible(true), 25000);
+    const fallback = setTimeout(() => setVisible(true), 21000);
 
     return () => {
       window.removeEventListener("section:additional-experience-ready", handler);
@@ -38,7 +38,12 @@ export function Interests() {
         // Fire event once header typing finishes
         setTimeout(() => {
           window.dispatchEvent(new Event("section:interests-ready"));
-        }, 600); // buffer after typing
+        }, 600);
+
+        // 👇 delay showing the card by 2 seconds after typing
+        setTimeout(() => {
+          setShowCard(true);
+        }, 800);
       }
     }, 100);
     return () => clearInterval(id);
@@ -61,61 +66,63 @@ export function Interests() {
         {displayedHeader}
       </motion.h2>
 
-      {/* Card */}
-      <motion.div
-        className="relative flex max-w-3xl flex-col items-center gap-6 rounded-3xl 
-                   border border-blue-500/30 bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-900 
-                   p-8 shadow-xl backdrop-blur-md
-                   transition-transform duration-500 hover:scale-[1.02] hover:shadow-[0_0_35px_rgba(96,165,250,0.6)]"
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 1.5, ease: "easeOut" }}
-      >
-        {/* Sentence */}
-        <p className="max-w-4xl text-center text-xl leading-relaxed text-gray-100 dark:text-gray-500">
-          Outside of CS, I stay active with lifting, basketball, pickleball, and hiking, and keep creative through Carnatic music, piano, and DJing.
-        </p>
+      {/* Card (only shows after delay) */}
+      {showCard && (
+        <motion.div
+          className="relative flex max-w-3xl flex-col items-center gap-6 rounded-3xl 
+                     border border-blue-500/30 bg-gradient-to-br from-neutral-900 via-neutral-800 to-neutral-900 
+                     p-8 shadow-xl backdrop-blur-md
+                     transition-transform duration-500 hover:scale-[1.02] hover:shadow-[0_0_35px_rgba(96,165,250,0.6)]"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+        >
+          {/* Sentence */}
+          <p className="max-w-4xl text-center text-xl leading-relaxed text-gray-100 dark:text-gray-500">
+            Outside of CS, I stay active with lifting, basketball, pickleball, and hiking, and keep creative through Carnatic music, piano, and DJing.
+          </p>
 
-        {/* Image Grid */}
-        <div className="grid w-full grid-cols-2 gap-4">
-          <div className="overflow-hidden rounded-xl border border-blue-300 shadow-md">
-            <Image
-              src="/hiking.jpg"
-              alt="Hiking"
-              width={500}
-              height={400}
-              className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-            />
+          {/* Image Grid */}
+          <div className="grid w-full grid-cols-2 gap-4">
+            <div className="overflow-hidden rounded-xl border border-blue-300 shadow-md">
+              <Image
+                src="/hiking.jpg"
+                alt="Hiking"
+                width={500}
+                height={400}
+                className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+              />
+            </div>
+            <div className="overflow-hidden rounded-xl border border-blue-300 shadow-md">
+              <Image
+                src="/piano.jpg"
+                alt="Piano"
+                width={500}
+                height={400}
+                className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+              />
+            </div>
+            <div className="overflow-hidden rounded-xl border border-blue-300 shadow-md">
+              <Image
+                src="/running.jpg"
+                alt="Running"
+                width={500}
+                height={400}
+                className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+              />
+            </div>
+            <div className="overflow-hidden rounded-xl border border-blue-300 shadow-md">
+              <Image
+                src="/dj.jpg"
+                alt="DJing"
+                width={500}
+                height={400}
+                className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+              />
+            </div>
           </div>
-          <div className="overflow-hidden rounded-xl border border-blue-300 shadow-md">
-            <Image
-              src="/piano.jpg"
-              alt="Piano"
-              width={500}
-              height={400}
-              className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-            />
-          </div>
-          <div className="overflow-hidden rounded-xl border border-blue-300 shadow-md">
-            <Image
-              src="/running.jpg"
-              alt="Running"
-              width={500}
-              height={400}
-              className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-            />
-          </div>
-          <div className="overflow-hidden rounded-xl border border-blue-300 shadow-md">
-            <Image
-              src="/dj.jpg"
-              alt="DJing"
-              width={500}
-              height={400}
-              className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-            />
-          </div>
-        </div>
-      </motion.div>
+        </motion.div>
+      )}
     </section>
   );
 }

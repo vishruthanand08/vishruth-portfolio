@@ -11,7 +11,7 @@ const projects = [
     skills: ["Solidity", "Hardhat", "Ethers.js", "IPFS"],
     link: "https://github.com/vishruthanand08/freelancer-escrow",
   },
-  
+
     {
     title: "GreenPlate",
     description:
@@ -52,14 +52,19 @@ export default function ProjectsGrid() {
 
   // Wait until Experience finishes
   useEffect(() => {
-    const handler = () => setVisible(true);
+    const handler = () => {
+      setTimeout(() => setVisible(true), 1500);
+    };
     window.addEventListener("section:experience-ready", handler);
+
     const fallback = setTimeout(() => setVisible(true), 12000);
+
     return () => {
       window.removeEventListener("section:experience-ready", handler);
       clearTimeout(fallback);
     };
   }, []);
+
 
   // Typing effect for header
   useEffect(() => {

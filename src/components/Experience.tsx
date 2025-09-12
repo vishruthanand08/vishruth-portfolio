@@ -59,18 +59,25 @@ export function Experience() {
   }, []);
 
   useEffect(() => {
-    if (!triggered) return;
-    let i = 0;
-    const id = setInterval(() => {
-      setTyped(HEADER.slice(0, i + 1));
-      i++;
-      if (i === HEADER.length) {
-        clearInterval(id);
-        setTimeout(() => setShowCards(true), 600);
-      }
-    }, 90);
-    return () => clearInterval(id);
-  }, [triggered]);
+  if (!triggered) return;
+  let i = 0;
+  const id = setInterval(() => {
+    setTyped(HEADER.slice(0, i + 1));
+    i++;
+    if (i === HEADER.length) {
+      clearInterval(id);
+
+      setTimeout(() => {
+        setShowCards(true);
+
+        // 🔥 Unlock Experience in the tab bar
+        window.dispatchEvent(new Event("section:experience-ready"));
+      }, 600);
+    }
+  }, 90);
+  return () => clearInterval(id);
+}, [triggered]);
+
 
   if (!triggered) return null;
 

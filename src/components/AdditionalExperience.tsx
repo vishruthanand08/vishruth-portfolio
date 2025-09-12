@@ -43,6 +43,7 @@ function CardRotate({ children, onSendToBack, sensitivity }: CardRotateProps) {
 export default function AdditionalExperience() {
   const [visible, setVisible] = useState(false);
   const [typedHeader, setTypedHeader] = useState("");
+  const [showCards, setShowCards] = useState(false); // 👈 for fade-in
 
   // Trigger only AFTER projects section
   useEffect(() => {
@@ -61,9 +62,14 @@ export default function AdditionalExperience() {
       i++;
       if (i === HEADER.length) {
         clearInterval(id);
+
+        // ✅ after header fully typed, fade in cards after delay
+        setTimeout(() => setShowCards(true), 800);
+
+        // fire global event
         setTimeout(() => {
           window.dispatchEvent(new Event("section:additional-experience-ready"));
-        }, 600);
+        }, 800);
       }
     }, 90);
     return () => clearInterval(id);
@@ -159,84 +165,90 @@ export default function AdditionalExperience() {
       </motion.h2>
 
       {/* Card Stack */}
-      <div
-        className="relative flex flex-col items-center"
-        style={{
-          width: 700,
-          height: 600, // shorter height to reduce whitespace
-          perspective: 1200,
-        }}
-      >
-        {cards.map((card, index) => (
-          <CardRotate
-            key={card.id}
-            onSendToBack={() => sendToBack(card.id)}
-            sensitivity={200}
-          >
-            <motion.div
-              className="rounded-2xl border-2 border-purple-500/70 bg-black p-10 shadow-lg text-white hover:shadow-[0_0_60px_rgba(59,130,246,0.9)] flex flex-col justify-between"
-              animate={{
-                scale: 1 + index * 0.02 - cards.length * 0.02,
-                y: index * 12,
-              }}
-              initial={false}
-              transition={{ type: "spring", stiffness: 260, damping: 25 }}
-              style={{
-                width: 700,
-                height: 600,
-              }}
-            >
-              <div>
-                <h3 className="text-4xl font-bold mb-6">{card.title}</h3>
-                <p className="text-xl italic text-blue-300 mb-8">
-                  {card.org} • {card.date}
-                </p>
-                <ul className="list-disc space-y-4 pl-6 text-xl text-gray-200 leading-relaxed">
-                  {card.bullets.map((b, i) => (
-                    <li key={i}>{b}</li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Logo + Links */}
-              <div className="mt-10 flex flex-col items-center justify-center gap-6">
-                {card.logo && (
-                  <img
-                    src={card.logo}
-                    alt={`${card.org} logo`}
-                    className="h-39 w-auto object-contain mx-auto"
-                  />
-                )}
-                {card.links && (
-                  <div className="flex gap-12">
-                    {card.links.map((link, i) => (
-                      <a
-                        key={i}
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-2xl font-bold text-blue-400 hover:text-blue-200 transition"
-                      >
-                        {link.label}
-                      </a>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          </CardRotate>
-        ))}
-
-        {/* Drag Hint */}
-        <motion.p
-          className="absolute -bottom-18 text-gray-400 text-2xl italic"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1.5, repeat: Infinity, repeatType: "reverse" }}
+      {showCards && (
+        <motion.div
+          className="relative flex flex-col items-center"
+          style={{
+            width: 700,
+            height: 600,
+            perspective: 1200,
+          }}
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.2, ease: "easeOut" }}
         >
-          ↔ drag to explore
-        </motion.p>
-      </div>
+          {cards.map((card, index) => (
+            <CardRotate
+              key={card.id}
+              onSendToBack={() => sendToBack(card.id)}
+              sensitivity={200}
+            >
+              <motion.div
+                className="rounded-2xl border-2 border-purple-500/70 bg-black p-10 shadow-lg text-white 
+                           hover:shadow-[0_0_60px_rgba(59,130,246,0.9)] flex flex-col justify-between"
+                animate={{
+                  scale: 1 + index * 0.02 - cards.length * 0.02,
+                  y: index * 12,
+                }}
+                initial={false}
+                transition={{ type: "spring", stiffness: 260, damping: 25 }}
+                style={{
+                  width: 700,
+                  height: 600,
+                }}
+              >
+                <div>
+                  <h3 className="text-4xl font-bold mb-6">{card.title}</h3>
+                  <p className="text-xl italic text-blue-300 mb-8">
+                    {card.org} • {card.date}
+                  </p>
+                  <ul className="list-disc space-y-4 pl-6 text-xl text-gray-200 leading-relaxed">
+                    {card.bullets.map((b, i) => (
+                      <li key={i}>{b}</li>
+                    ))}
+                  </ul>
+                </div>
+
+                {/* Logo + Links */}
+                <div className="mt-10 flex flex-col items-center justify-center gap-6">
+                  {card.logo && (
+                    <img
+                      src={card.logo}
+                      alt={`${card.org} logo`}
+                      className="h-39 w-auto object-contain mx-auto"
+                    />
+                  )}
+                  {card.links && (
+                    <div className="flex gap-12">
+                      {card.links.map((link, i) => (
+                        <a
+                          key={i}
+                          href={link.href}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-2xl font-bold text-blue-400 hover:text-blue-200 transition"
+                        >
+                          {link.label}
+                        </a>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              </motion.div>
+            </CardRotate>
+          ))}
+
+          {/* Drag Hint */}
+          <motion.p
+            className="absolute -bottom-18 text-gray-400 text-2xl italic"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 1.5, repeat: Infinity, repeatType: "reverse" }}
+          >
+            ↔ drag to explore
+          </motion.p>
+        </motion.div>
+      )}
     </section>
   );
 }
