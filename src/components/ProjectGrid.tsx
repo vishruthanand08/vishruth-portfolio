@@ -5,18 +5,19 @@ import { useEffect, useState } from "react";
 
 const projects = [
   {
-    title: "GreenPlate",
-    description:
-      "An Android app that helps people manage meals, recipes, and pantry items with real-time syncing and a clean, interactive design.",
-    skills: ["Java", "Android Studio", "Firebase", "UI/UX"],
-    link: "https://github.com/vishruthanand08/GreenPlate",
-  },
-  {
     title: "Freelancer Escrow Smart Contract",
     description:
       "A decentralized Ethereum contract for milestone-based payments between clients and freelancers. Includes trustless escrow deposits, IPFS-linked milestones, and mediator-based dispute resolution.",
     skills: ["Solidity", "Hardhat", "Ethers.js", "IPFS"],
     link: "https://github.com/vishruthanand08/freelancer-escrow",
+  },
+  
+    {
+    title: "GreenPlate",
+    description:
+      "An Android app that helps people manage meals, recipes, and pantry items with real-time syncing and a clean, interactive design.",
+    skills: ["Java", "Android Studio", "Firebase", "UI/UX"],
+    link: "https://github.com/riapat/CS2340A_Team13",
   },
   {
     title: "IV Skew Trading Strategy",

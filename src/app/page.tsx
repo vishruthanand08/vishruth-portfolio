@@ -3,6 +3,7 @@ import { About } from "@/components/About";
 import { Interests } from "@/components/Interests";
 import { Experience } from "@/components/Experience";
 import ProjectGrid from "../components/ProjectGrid";
+import AdditionalExperience from "@/components/AdditionalExperience";
 
 
 export default function Home() {
@@ -11,7 +12,8 @@ export default function Home() {
       <Hero />
       <About />
       <Experience />
-      <ProjectGrid />   
+      <ProjectGrid />
+      <AdditionalExperience />
       <Interests />
     </main>
   );
