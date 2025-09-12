@@ -3,7 +3,22 @@
 import React, { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { gsap } from "gsap";
+import { motion, AnimatePresence } from "framer-motion";
 
+// --- Toast Component ---
+const Toast: React.FC<{ message: string }> = ({ message }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 30 }}
+    animate={{ opacity: 1, y: 0 }}
+    exit={{ opacity: 0, y: 30 }}
+    transition={{ duration: 0.4, ease: "easeOut" }}
+    className="fixed bottom-6 right-6 rounded-lg bg-blue-600/90 px-4 py-2 text-white shadow-lg backdrop-blur-md"
+  >
+    {message}
+  </motion.div>
+);
+
+// --- Types ---
 export type PillNavItem = {
   label: string;
   href: string;
@@ -17,6 +32,7 @@ export interface PillNavProps {
   ease?: string;
 }
 
+// --- Main Component ---
 const PillNav: React.FC<PillNavProps> = ({
   items,
   activeHref,
@@ -25,7 +41,9 @@ const PillNav: React.FC<PillNavProps> = ({
 }) => {
   const circleRefs = useRef<Array<HTMLSpanElement | null>>([]);
   const tlRefs = useRef<Array<gsap.core.Timeline | null>>([]);
+  const [toast, setToast] = useState("");
 
+  // --- Layout + hover animations (your original GSAP logic) ---
   useEffect(() => {
     const layout = () => {
       circleRefs.current.forEach((circle) => {
@@ -97,56 +115,88 @@ const PillNav: React.FC<PillNavProps> = ({
     tlRefs.current[i]?.reverse();
   };
 
-  return (
-    <nav
-      className={`flex items-center justify-center gap-4 ${className}`}
-      aria-label="Primary"
-    >
-      {items.map((item, i) => {
-        const isActive = activeHref === item.href;
+  // --- Copy to clipboard handler ---
+  const handleContactClick = async (
+    email: string,
+    e: React.MouseEvent<HTMLAnchorElement>
+  ) => {
+    e.preventDefault();
+    try {
+      await navigator.clipboard.writeText(email);
+      setToast(`📋 Email copied to clipboard: ${email}`);
+      setTimeout(() => setToast(""), 2500);
+    } catch (err) {
+      console.error("Copy failed:", err);
+    }
+  };
 
-        return (
-          <Link
-            key={i}
-            href={item.href}
-            target={item.href.startsWith("http") ? "_blank" : "_self"}
-            rel={item.href.startsWith("http") ? "noopener noreferrer" : ""}
-            aria-label={item.ariaLabel || item.label}
-            className="relative overflow-hidden rounded-full bg-gradient-to-r 
+  return (
+    <>
+      <nav
+        className={`flex items-center justify-center gap-4 ${className}`}
+        aria-label="Primary"
+      >
+        {items.map((item, i) => {
+          const isActive = activeHref === item.href;
+          const isContact = item.label.toLowerCase() === "contact";
+
+          return (
+            <Link
+              key={i}
+              href={item.href}
+              target={
+                item.href.startsWith("http") && !isContact ? "_blank" : "_self"
+              }
+              rel={
+                item.href.startsWith("http") && !isContact
+                  ? "noopener noreferrer"
+                  : ""
+              }
+              aria-label={item.ariaLabel || item.label}
+              className="relative overflow-hidden rounded-full bg-gradient-to-r 
                        from-blue-600 via-indigo-500 to-purple-600
                        px-6 py-2 font-semibold tracking-wide uppercase
                        text-white shadow-lg backdrop-blur-md
                        transition-transform duration-300"
-            onMouseEnter={() => handleEnter(i)}
-            onMouseLeave={() => handleLeave(i)}
-          >
-            {/* Hover Circle */}
-            <span
-              ref={(el) => (circleRefs.current[i] = el)}
-              className="hover-circle absolute left-1/2 bottom-0 rounded-full z-[1] block pointer-events-none bg-white/20"
-            />
-
-            {/* Label stack */}
-            <span className="label-stack relative inline-block z-[2]">
-              <span className="pill-label relative z-[2] inline-block">
-                {item.label}
-              </span>
+              onClick={
+                isContact
+                  ? (e) => handleContactClick("vanand64@gatech.edu", e)
+                  : undefined
+              }
+              onMouseEnter={() => handleEnter(i)}
+              onMouseLeave={() => handleLeave(i)}
+            >
+              {/* Hover Circle */}
               <span
-                className="pill-label-hover absolute left-0 top-0 z-[3] inline-block text-white"
-                aria-hidden="true"
-              >
-                {item.label}
-              </span>
-            </span>
+                ref={(el) => (circleRefs.current[i] = el)}
+                className="hover-circle absolute left-1/2 bottom-0 rounded-full z-[1] block pointer-events-none bg-white/20"
+              />
 
-            {/* Active indicator */}
-            {isActive && (
-              <span className="absolute left-1/2 -bottom-[6px] -translate-x-1/2 w-3 h-3 rounded-full bg-blue-400 shadow-[0_0_12px_rgba(59,130,246,0.9)]" />
-            )}
-          </Link>
-        );
-      })}
-    </nav>
+              {/* Label stack */}
+              <span className="label-stack relative inline-block z-[2]">
+                <span className="pill-label relative z-[2] inline-block">
+                  {item.label}
+                </span>
+                <span
+                  className="pill-label-hover absolute left-0 top-0 z-[3] inline-block text-white"
+                  aria-hidden="true"
+                >
+                  {item.label}
+                </span>
+              </span>
+
+              {/* Active indicator */}
+              {isActive && (
+                <span className="absolute left-1/2 -bottom-[6px] -translate-x-1/2 w-3 h-3 rounded-full bg-blue-400 shadow-[0_0_12px_rgba(59,130,246,0.9)]" />
+              )}
+            </Link>
+          );
+        })}
+      </nav>
+
+      {/* Toast */}
+      <AnimatePresence>{toast && <Toast message={toast} />}</AnimatePresence>
+    </>
   );
 };
 

@@ -36,14 +36,13 @@ const experiences = [
 export function Experience() {
   const HEADER = "Experience";
 
-  const [triggered, setTriggered] = useState(false); // section trigger
-  const [typed, setTyped] = useState("");            // typed header
-  const [showCards, setShowCards] = useState(false); // reveal timeline/cards
+  const [triggered, setTriggered] = useState(false);
+  const [typed, setTyped] = useState("");
+  const [showCards, setShowCards] = useState(false);
 
   useEffect(() => {
     const onReady = () => {
-      
-      setTimeout(() => setTriggered(true), 2800); // 2.8s wait
+      setTimeout(() => setTriggered(true), 2800);
     };
 
     window.addEventListener("section:interests-ready", onReady);
@@ -55,7 +54,6 @@ export function Experience() {
     };
   }, []);
 
-  // --- Type the header once triggered
   useEffect(() => {
     if (!triggered) return;
     let i = 0;
@@ -64,7 +62,6 @@ export function Experience() {
       i++;
       if (i === HEADER.length) {
         clearInterval(id);
-        // After header typing finishes, show timeline/cards
         setTimeout(() => setShowCards(true), 600);
       }
     }, 90);
@@ -90,7 +87,7 @@ export function Experience() {
 
       {/* Timeline container */}
       {showCards && (
-        <div className="relative w-full max-w-5xl">
+        <div className="relative w-full max-w-6xl">
           {/* Central glowing line */}
           <motion.div
             className="absolute left-1/2 top-0 h-full w-[2px] -translate-x-1/2
@@ -104,14 +101,18 @@ export function Experience() {
           {/* Cards */}
           <div className="space-y-20">
             {experiences.map((exp, i) => {
-              const fromLeft = i % 2 !== 0; // alternate sides
+              const fromLeft = i % 2 !== 0;
               return (
                 <motion.div
                   key={i}
                   className="relative w-full"
                   initial={{ opacity: 0, x: fromLeft ? -120 : 120 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, ease: "easeOut", delay: i * 0.3 }}
+                  transition={{
+                    duration: 0.8,
+                    ease: "easeOut",
+                    delay: i * 0.3,
+                  }}
                 >
                   {/* Timeline node */}
                   <motion.div
@@ -124,23 +125,27 @@ export function Experience() {
 
                   {/* Experience card */}
                   <div
-                    className={`relative sm:w-[65%] w-full
-                                ${fromLeft ? "sm:pl-12 sm:ml-0 sm:mr-auto" : "sm:pr-12 sm:mr-0 sm:ml-auto"}`}
+                    className={`relative sm:w-[70%] w-full
+                                ${
+                                  fromLeft
+                                    ? "sm:pl-12 sm:ml-0 sm:mr-auto"
+                                    : "sm:pr-12 sm:mr-0 sm:ml-auto"
+                                }`}
                   >
                     <div
-                      className="rounded-2xl border border-blue-400/70 bg-black/60 p-6
+                      className="rounded-2xl border-2 border-blue-400/70 bg-black/60 p-8
                                  shadow-lg backdrop-blur-md
-                                 transition-transform duration-300 hover:scale-[1.02]
-                                 hover:shadow-[0_0_35px_rgba(96,165,250,0.7)]"
+                                 transition-transform duration-300 hover:scale-[1.03]
+                                 hover:shadow-[0_0_40px_rgba(96,165,250,0.7)]"
                     >
-                      <h3 className="text-xl font-semibold text-white">
+                      <h3 className="text-2xl font-semibold text-white">
                         {exp.title}
                       </h3>
-                      <p className="text-sm italic text-blue-300">
+                      <p className="text-lg italic text-blue-300">
                         {exp.org} • {exp.date}
                       </p>
                       {exp.bullets?.length ? (
-                        <ul className="mt-3 list-disc space-y-1 pl-5 text-gray-300">
+                        <ul className="mt-4 list-disc space-y-2 pl-5 text-lg text-gray-300">
                           {exp.bullets.map((b, j) => (
                             <li key={j}>{b}</li>
                           ))}
