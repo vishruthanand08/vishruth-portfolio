@@ -11,8 +11,7 @@ const projects = [
     skills: ["Solidity", "Hardhat", "Ethers.js", "IPFS"],
     link: "https://github.com/vishruthanand08/freelancer-escrow",
   },
-
-    {
+  {
     title: "GreenPlate",
     description:
       "An Android app that helps people manage meals, recipes, and pantry items with real-time syncing and a clean, interactive design.",
@@ -65,7 +64,6 @@ export default function ProjectsGrid() {
     };
   }, []);
 
-
   // Typing effect for header
   useEffect(() => {
     if (!visible) return;
@@ -104,7 +102,7 @@ export default function ProjectsGrid() {
       {/* Grid */}
       {showGrid && (
         <div className="flex flex-col items-center gap-12 w-full max-w-7xl">
-          {/* Top row (3 cards on desktop, 2 on tablet, 1 on mobile) */}
+          {/* Top row (3 cards) */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 w-full justify-items-center">
             {projects.slice(0, 3).map((project, i) => (
               <motion.div
@@ -157,8 +155,8 @@ export default function ProjectsGrid() {
             ))}
           </div>
 
-          {/* Bottom row (2 centered on desktop, responsive collapse below) */}
-          <div className="flex flex-col sm:flex-row justify-center gap-10 w-full flex-wrap">
+          {/* Bottom row (centered 2 cards) */}
+          <div className="flex justify-center gap-20 mt-10 w-full">
             {projects.slice(3).map((project, i) => (
               <motion.div
                 key={i + 3}

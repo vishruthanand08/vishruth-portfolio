@@ -8,12 +8,11 @@ export function Interests() {
   const HEADER = "Interests";
   const [visible, setVisible] = useState(false);
   const [displayedHeader, setDisplayedHeader] = useState("");
-  const [showCard, setShowCard] = useState(false); // 👈 new state
+  const [showCard, setShowCard] = useState(false);
 
-  // Delay section until AdditionalExperience finishes
   useEffect(() => {
     const handler = () => {
-      setTimeout(() => setVisible(true), 500); 
+      setTimeout(() => setVisible(true), 2000);
     };
     window.addEventListener("section:additional-experience-ready", handler);
 
@@ -25,7 +24,6 @@ export function Interests() {
     };
   }, []);
 
-  // Typing animation for header
   useEffect(() => {
     if (!visible) return;
     let i = 0;
@@ -34,13 +32,9 @@ export function Interests() {
       i++;
       if (i === HEADER.length) {
         clearInterval(id);
-
-        // Fire event once header typing finishes
         setTimeout(() => {
           window.dispatchEvent(new Event("section:interests-ready"));
         }, 600);
-
-        // 👇 delay showing the card by 2 seconds after typing
         setTimeout(() => {
           setShowCard(true);
         }, 800);
@@ -54,9 +48,8 @@ export function Interests() {
   return (
     <section
       id="interests"
-      className="relative flex w-full flex-col items-center justify-center px-6 py-20 sm:px-12"
+      className="relative flex w-full flex-col items-center justify-center px-6 py-20 sm:px-12 z-10"
     >
-      {/* Header */}
       <motion.h2
         className="mb-15 text-3xl font-bold text-blue-500 sm:text-4xl"
         initial={{ opacity: 0 }}
@@ -66,7 +59,6 @@ export function Interests() {
         {displayedHeader}
       </motion.h2>
 
-      {/* Card (only shows after delay) */}
       {showCard && (
         <motion.div
           className="relative flex max-w-3xl flex-col items-center gap-6 rounded-3xl 
@@ -77,12 +69,10 @@ export function Interests() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.5, ease: "easeOut" }}
         >
-          {/* Sentence */}
           <p className="max-w-4xl text-center text-xl leading-relaxed text-gray-100 dark:text-gray-500">
             Outside of CS, I stay active with lifting, basketball, pickleball, and hiking, and keep creative through Carnatic music, piano, and DJing.
           </p>
 
-          {/* Image Grid */}
           <div className="grid w-full grid-cols-2 gap-4">
             <div className="overflow-hidden rounded-xl border border-blue-300 shadow-md">
               <Image

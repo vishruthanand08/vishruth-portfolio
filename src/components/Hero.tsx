@@ -11,7 +11,7 @@ export function Hero() {
   const [displayedName, setDisplayedName] = useState("");
   const [displayedTagline, setDisplayedTagline] = useState("");
   const [nameDone, setNameDone] = useState(false);
-  const [taglineDone, setTaglineDone] = useState(false); // NEW
+  const [taglineDone, setTaglineDone] = useState(false);
 
   // --- Name typing ---
   useEffect(() => {
@@ -36,15 +36,14 @@ export function Hero() {
       i++;
       if (i === TAGLINE.length) {
         clearInterval(id);
-        setTimeout(() => setTaglineDone(true), 2300); // ✅ wait a tiny bit after last char
+        setTimeout(() => setTaglineDone(true), 2300);
       }
     }, 50);
     return () => clearInterval(id);
   }, [nameDone]);
 
-
   return (
-    <section className="relative flex h-screen flex-col items-center justify-center overflow-hidden px-6 text-center">
+    <section className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden px-4 text-center sm:px-6">
       {/* Aurora background */}
       <div className="absolute inset-0 -z-10">
         <Aurora
@@ -58,7 +57,7 @@ export function Hero() {
       {/* Name */}
       <div className="relative inline-block z-10">
         <motion.h1
-          className="mb-2 flex items-baseline justify-center text-4xl font-extrabold tracking-tight sm:text-6xl"
+          className="mb-2 flex items-baseline justify-center text-3xl xs:text-4xl sm:text-6xl font-extrabold tracking-tight"
           animate={nameDone ? { y: [0, -10, 0] } : {}}
           transition={nameDone ? { duration: 0.5, ease: "easeOut" } : {}}
         >
@@ -106,7 +105,7 @@ export function Hero() {
 
       {/* Tagline */}
       {nameDone && (
-        <h2 className="mt-6 text-lg font-medium text-blue-600 dark:text-blue-400 sm:text-2xl relative z-10">
+        <h2 className="mt-6 max-w-sm sm:max-w-xl mx-auto text-lg sm:text-2xl font-medium text-blue-600 dark:text-blue-400 relative z-10">
           {displayedTagline.split("").map((char, i) => (
             <motion.span
               key={i}
@@ -121,25 +120,26 @@ export function Hero() {
         </h2>
       )}
 
+      {/* Pills */}
       {nameDone && taglineDone && (
-  <motion.div
-    className="mt-8 relative z-10"
-    initial={{ opacity: 0, y: 40 }}   // starts faded + below
-    animate={{ opacity: 1, y: 0 }}    // slides up + fades in
-    transition={{ duration: 1.5, ease: "easeOut" }}
-  >
-    <PillNav
-      items={[
-        { label: "Resume", href: "/resume.pdf" },
-        { label: "LinkedIn", href: "https://linkedin.com/in/vishruth-anand" },
-        { label: "GitHub", href: "https://github.com/vishruthanand08" },
-        { label: "Contact", href: "mailto:vanand64@gatech.edu" },
-      ]}
-      activeHref="/"
-    />
-  </motion.div>
-)}
-
+        <motion.div
+          className="mt-8 relative z-10"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1.5, ease: "easeOut" }}
+        >
+          <PillNav
+            className="flex-wrap justify-center gap-4 sm:gap-6"
+            items={[
+              { label: "Resume", href: "/resume.pdf" },
+              { label: "LinkedIn", href: "https://linkedin.com/in/vishruth-anand" },
+              { label: "GitHub", href: "https://github.com/vishruthanand08" },
+              { label: "Contact", href: "mailto:vanand64@gatech.edu" },
+            ]}
+            activeHref="/"
+          />
+        </motion.div>
+      )}
     </section>
   );
 }

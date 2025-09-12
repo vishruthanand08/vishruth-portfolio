@@ -168,7 +168,9 @@ const PillNav: React.FC<PillNavProps> = ({
             >
               {/* Hover Circle */}
               <span
-                ref={(el) => (circleRefs.current[i] = el)}
+                ref={(el) => {
+  circleRefs.current[i] = el;
+}}
                 className="hover-circle absolute left-1/2 bottom-0 rounded-full z-[1] block pointer-events-none bg-white/20"
               />
 

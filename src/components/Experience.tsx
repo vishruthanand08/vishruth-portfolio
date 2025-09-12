@@ -44,51 +44,47 @@ export function Experience() {
   const [typed, setTyped] = useState("");
   const [showCards, setShowCards] = useState(false);
 
+  // keep your original sequencing
   useEffect(() => {
     const onReady = () => {
       setTimeout(() => setTriggered(true), 2800);
     };
-
     window.addEventListener("section:interests-ready", onReady);
     const fallback = setTimeout(() => setTriggered(true), 8500);
-
     return () => {
       window.removeEventListener("section:interests-ready", onReady);
       clearTimeout(fallback);
     };
   }, []);
 
+  // type header, then reveal cards + emit ready
   useEffect(() => {
-  if (!triggered) return;
-  let i = 0;
-  const id = setInterval(() => {
-    setTyped(HEADER.slice(0, i + 1));
-    i++;
-    if (i === HEADER.length) {
-      clearInterval(id);
-
-      setTimeout(() => {
-        setShowCards(true);
-
-        // 🔥 Unlock Experience in the tab bar
-        window.dispatchEvent(new Event("section:experience-ready"));
-      }, 600);
-    }
-  }, 90);
-  return () => clearInterval(id);
-}, [triggered]);
-
+    if (!triggered) return;
+    let i = 0;
+    const id = setInterval(() => {
+      setTyped(HEADER.slice(0, i + 1));
+      i++;
+      if (i === HEADER.length) {
+        clearInterval(id);
+        setTimeout(() => {
+          setShowCards(true);
+          window.dispatchEvent(new Event("section:experience-ready"));
+        }, 600);
+      }
+    }, 90);
+    return () => clearInterval(id);
+  }, [triggered]);
 
   if (!triggered) return null;
 
   return (
     <section
       id="experience"
-      className="relative flex flex-col items-center justify-center px-6 py-24 sm:px-12"
+      className="relative flex flex-col items-center justify-center px-4 sm:px-12 py-24"
     >
       {/* Header */}
       <motion.h2
-        className="mb-16 text-3xl font-bold text-blue-500 sm:text-4xl"
+        className="mb-16 text-3xl sm:text-4xl font-bold text-blue-500"
         initial={{ opacity: 0 }}
         animate={{ opacity: triggered ? 1 : 0 }}
         transition={{ duration: 0.8 }}
@@ -99,87 +95,77 @@ export function Experience() {
       {/* Timeline container */}
       {showCards && (
         <div className="relative w-full max-w-6xl">
-          {/* Central glowing line */}
+          {/* Center line: desktop only to avoid mobile misalignment */}
           <motion.div
-            className="absolute left-1/2 top-0 h-full w-[2px] -translate-x-1/2
-                       bg-gradient-to-b from-blue-400 via-purple-500 to-yellow-400 opacity-70"
+            className="hidden sm:block absolute left-1/2 top-0 h-full w-[2px] -translate-x-1/2 bg-gradient-to-b from-blue-400 via-purple-500 to-yellow-400 opacity-70"
             initial={{ scaleY: 0 }}
             animate={{ scaleY: 1 }}
             transition={{ duration: 1.2, ease: "easeOut" }}
             style={{ transformOrigin: "top" }}
           />
 
-          {/* Cards */}
-          <div className="space-y-20">
+          <div className="space-y-14 sm:space-y-20">
             {experiences.map((exp, i) => {
-              const fromLeft = i % 2 !== 0; // alternate side for card
+              const fromLeft = i % 2 !== 0; // alternate on desktop only
               return (
                 <motion.div
                   key={i}
                   className="relative w-full"
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
-                  transition={{
-                    duration: 0.8,
-                    ease: "easeOut",
-                    delay: i * 0.3,
-                  }}
+                  transition={{ duration: 0.8, ease: "easeOut", delay: i * 0.3 }}
                 >
-                  {/* Timeline node */}
+                  {/* Timeline node: desktop only */}
                   <motion.div
-                    className="absolute left-1/2 top-6 h-3 w-3 -translate-x-1/2 rounded-full bg-blue-400
-                               shadow-[0_0_18px_rgba(59,130,246,0.9)]"
+                    className="hidden sm:block absolute left-1/2 top-6 h-3 w-3 -translate-x-1/2 rounded-full bg-blue-400 shadow-[0_0_18px_rgba(59,130,246,0.9)]"
                     initial={{ scale: 0.6, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     transition={{ duration: 0.4, delay: i * 0.3 }}
                   />
 
-                  {/* Flex wrapper: card + logo */}
+                  {/* Wrapper */}
                   <div
-                    className={`relative sm:w-[70%] w-full flex items-center gap-6
+                    className={`relative w-full flex flex-col items-center gap-4 sm:gap-6
+                                sm:w-[65%]
                                 ${
                                   fromLeft
-                                    ? "sm:ml-0 sm:mr-auto flex-row-reverse"
-                                    : "sm:ml-auto sm:mr-0 flex-row"
+                                    ? "sm:ml-0 sm:mr-auto sm:flex-row-reverse"
+                                    : "sm:ml-auto sm:mr-0 sm:flex-row"
                                 }`}
                   >
-                    {/* Logo */}
+                    {/* Logo (centered above on mobile; side on desktop) */}
                     <motion.div
                       initial={{ x: fromLeft ? -80 : 80, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
                       transition={{ duration: 0.8, ease: "easeOut", delay: i * 0.3 }}
-                      className="flex-shrink-0"
+                      className="flex-shrink-0 order-[-1] sm:order-none"
                     >
-                      <div className="w-24 h-24 sm:w-28 sm:h-28 rounded-xl border-2 border-blue-400/60 bg-white/10 shadow-md overflow-hidden flex items-center justify-center">
+                      <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-xl border-2 border-blue-400/60 bg-white/10 shadow-md overflow-hidden mx-auto sm:mx-0 flex items-center justify-center">
                         <Image
                           src={exp.logo}
                           alt={`${exp.org} logo`}
-                          width={112} // matches w-28
+                          width={112}
                           height={112}
                           className="object-contain w-full h-full"
                         />
                       </div>
                     </motion.div>
 
-
-                    {/* Experience card */}
+                    {/* Card */}
                     <motion.div
                       initial={{ x: fromLeft ? 120 : -120, opacity: 0 }}
                       animate={{ x: 0, opacity: 1 }}
                       transition={{ duration: 0.8, ease: "easeOut", delay: i * 0.3 }}
-                      className="rounded-2xl border-2 border-blue-400/70 bg-black/60 p-8
-                                 shadow-lg backdrop-blur-md
-                                 transition-transform duration-300 hover:scale-[1.03]
-                                 hover:shadow-[0_0_40px_rgba(96,165,250,0.7)] w-full"
+                      className="w-full rounded-2xl border-2 border-blue-400/70 bg-black/60 p-5 sm:p-8 shadow-lg backdrop-blur-md transition-transform duration-300 hover:scale-[1.03] hover:shadow-[0_0_40px_rgba(96,165,250,0.7)]"
                     >
-                      <h3 className="text-2xl font-semibold text-white">
+                      <h3 className="text-xl sm:text-2xl font-semibold text-white">
                         {exp.title}
                       </h3>
-                      <p className="text-lg italic text-blue-300">
+                      <p className="text-base sm:text-lg italic text-blue-300">
                         {exp.org} • {exp.date}
                       </p>
                       {exp.bullets?.length ? (
-                        <ul className="mt-4 list-disc space-y-2 pl-5 text-lg text-gray-300">
+                        <ul className="mt-4 list-disc space-y-2 pl-5 text-base sm:text-lg text-gray-300">
                           {exp.bullets.map((b, j) => (
                             <li key={j}>{b}</li>
                           ))}

@@ -9,7 +9,20 @@ interface CardRotateProps {
   sensitivity: number;
 }
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = useState(false);
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 640px)");
+    const update = () => setIsMobile(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, []);
+  return isMobile;
+}
+
 function CardRotate({ children, onSendToBack, sensitivity }: CardRotateProps) {
+  const isMobile = useIsMobile();
   const x = useMotionValue(0);
   const y = useMotionValue(0);
 
@@ -27,9 +40,9 @@ function CardRotate({ children, onSendToBack, sensitivity }: CardRotateProps) {
 
   return (
     <motion.div
-      className="absolute cursor-grab"
+      className="sm:absolute max-sm:static cursor-grab max-sm:cursor-default"
       style={{ x, y }}
-      drag
+      drag={!isMobile}
       dragConstraints={{ top: 0, right: 0, bottom: 0, left: 0 }}
       dragElastic={0.5}
       whileTap={{ cursor: "grabbing" }}
@@ -43,16 +56,14 @@ function CardRotate({ children, onSendToBack, sensitivity }: CardRotateProps) {
 export default function AdditionalExperience() {
   const [visible, setVisible] = useState(false);
   const [typedHeader, setTypedHeader] = useState("");
-  const [showCards, setShowCards] = useState(false); // 👈 for fade-in
+  const [showCards, setShowCards] = useState(false);
 
-  // Trigger only AFTER projects section
   useEffect(() => {
     const handler = () => setVisible(true);
     window.addEventListener("section:projects-ready", handler);
     return () => window.removeEventListener("section:projects-ready", handler);
   }, []);
 
-  // Typing effect for header + dispatch ready event
   useEffect(() => {
     if (!visible) return;
     const HEADER = "Additional Experience";
@@ -62,11 +73,7 @@ export default function AdditionalExperience() {
       i++;
       if (i === HEADER.length) {
         clearInterval(id);
-
-        // ✅ after header fully typed, fade in cards after delay
         setTimeout(() => setShowCards(true), 800);
-
-        // fire global event
         setTimeout(() => {
           window.dispatchEvent(new Event("section:additional-experience-ready"));
         }, 800);
@@ -152,11 +159,10 @@ export default function AdditionalExperience() {
   return (
     <section
       id="additional-experience"
-      className="relative flex flex-col items-center justify-center px-6 py-24 sm:px-12"
+      className="relative flex flex-col items-center justify-center px-4 sm:px-12 py-16 sm:py-24"
     >
-      {/* Header */}
       <motion.h2
-        className="mb-16 text-3xl font-bold text-blue-500 sm:text-4xl"
+        className="mb-10 sm:mb-16 text-2xl sm:text-4xl font-bold text-blue-500"
         initial={{ opacity: 0 }}
         animate={{ opacity: visible ? 1 : 0 }}
         transition={{ duration: 0.8 }}
@@ -164,15 +170,10 @@ export default function AdditionalExperience() {
         {typedHeader}
       </motion.h2>
 
-      {/* Card Stack */}
       {showCards && (
         <motion.div
-          className="relative flex flex-col items-center"
-          style={{
-            width: 700,
-            height: 600,
-            perspective: 1200,
-          }}
+          className="relative flex flex-col items-center w-full max-w-[700px] min-h-[700px]"
+          style={{ perspective: 1200 }}
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: "easeOut" }}
@@ -184,63 +185,70 @@ export default function AdditionalExperience() {
               sensitivity={200}
             >
               <motion.div
-                className="rounded-2xl border-2 border-purple-500/70 bg-black p-10 shadow-lg text-white 
-                           hover:shadow-[0_0_60px_rgba(59,130,246,0.9)] flex flex-col justify-between"
+                className="rounded-2xl border-2 border-purple-500/70 bg-black 
+                           p-6 sm:p-10 shadow-lg text-white 
+                           hover:shadow-[0_0_60px_rgba(59,130,246,0.9)] flex flex-col justify-between h-full
+                           max-sm:w-full max-sm:h-[480px]"
                 animate={{
-                  scale: 1 + index * 0.02 - cards.length * 0.02,
-                  y: index * 12,
+                  scale:
+                    window.innerWidth < 640
+                      ? 1
+                      : 1 + index * 0.02 - cards.length * 0.02,
+                  y: window.innerWidth < 640 ? 0 : index * 12,
                 }}
                 initial={false}
                 transition={{ type: "spring", stiffness: 260, damping: 25 }}
                 style={{
-                  width: 700,
-                  height: 600,
+                  width: "100%",
+                  maxWidth: 700,
+                  minHeight: 600, // ✅ all cards same height
                 }}
               >
-                <div>
-                  <h3 className="text-4xl font-bold mb-6">{card.title}</h3>
-                  <p className="text-xl italic text-blue-300 mb-8">
-                    {card.org} • {card.date}
-                  </p>
-                  <ul className="list-disc space-y-4 pl-6 text-xl text-gray-200 leading-relaxed">
-                    {card.bullets.map((b, i) => (
-                      <li key={i}>{b}</li>
-                    ))}
-                  </ul>
-                </div>
-
-                {/* Logo + Links */}
-                <div className="mt-10 flex flex-col items-center justify-center gap-6">
-                  {card.logo && (
-                    <img
-                      src={card.logo}
-                      alt={`${card.org} logo`}
-                      className="h-39 w-auto object-contain mx-auto"
-                    />
-                  )}
-                  {card.links && (
-                    <div className="flex gap-12">
-                      {card.links.map((link, i) => (
-                        <a
-                          key={i}
-                          href={link.href}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="text-2xl font-bold text-blue-400 hover:text-blue-200 transition"
-                        >
-                          {link.label}
-                        </a>
+                <div className="flex flex-col justify-between h-full">
+                  <div>
+                    <h3 className="text-2xl sm:text-4xl font-bold mb-4 sm:mb-6">
+                      {card.title}
+                    </h3>
+                    <p className="text-lg sm:text-xl italic text-blue-300 mb-6 sm:mb-8">
+                      {card.org} • {card.date}
+                    </p>
+                    <ul className="list-disc space-y-2 sm:space-y-4 pl-5 sm:pl-6 text-base sm:text-xl text-gray-200 leading-relaxed">
+                      {card.bullets.map((b, i) => (
+                        <li key={i}>{b}</li>
                       ))}
-                    </div>
-                  )}
+                    </ul>
+                  </div>
+                  <div className="mt-6 sm:mt-10 flex flex-col items-center justify-center gap-4 sm:gap-6">
+                    {card.logo && (
+                      <img
+                        src={card.logo}
+                        alt={`${card.org} logo`}
+                        className="h-20 sm:h-40 w-auto object-contain mx-auto"
+                      />
+                    )}
+                    {card.links && (
+                      <div className="flex gap-6 sm:gap-12 flex-wrap justify-center">
+                        {card.links.map((link, i) => (
+                          <a
+                            key={i}
+                            href={link.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-base sm:text-2xl font-bold text-blue-400 hover:text-blue-200 transition"
+                          >
+                            {link.label}
+                          </a>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
               </motion.div>
             </CardRotate>
           ))}
 
-          {/* Drag Hint */}
           <motion.p
-            className="absolute -bottom-18 text-gray-400 text-2xl italic"
+            className="absolute -bottom-16 sm:-bottom-12 text-gray-400 text-base sm:text-2xl italic"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 1.5, repeat: Infinity, repeatType: "reverse" }}

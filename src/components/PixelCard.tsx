@@ -20,7 +20,6 @@ class Pixel {
   isIdle: boolean;
   isReverse: boolean;
   isShimmer: boolean;
-
   constructor(
     canvas: HTMLCanvasElement,
     context: CanvasRenderingContext2D,
@@ -235,7 +234,7 @@ export default function PixelCard({
     let allIdle = true;
     for (let i = 0; i < pixelsRef.current.length; i++) {
       const pixel = pixelsRef.current[i];
-      // @ts-ignore
+      // @ts-expect-error: required 
       pixel[fnName]();
       if (!pixel.isIdle) {
         allIdle = false;
