@@ -131,7 +131,7 @@ export function Hero() {
           <PillNav
             className="flex-wrap justify-center gap-4 sm:gap-6"
             items={[
-              { label: "Resume", href: "/resume.pdf" },
+              { label: "Resume", href: "https://www.vishruthanand.com/resume.pdf" },
               { label: "LinkedIn", href: "https://linkedin.com/in/vishruth-anand" },
               { label: "GitHub", href: "https://github.com/vishruthanand08" },
               { label: "Contact", href: "mailto:vanand64@gatech.edu" },

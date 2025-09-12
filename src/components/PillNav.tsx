@@ -123,7 +123,7 @@ const PillNav: React.FC<PillNavProps> = ({
     e.preventDefault();
     try {
       await navigator.clipboard.writeText(email);
-      setToast(`📋 Email copied to clipboard: ${email}`);
+      setToast(`Email copied to clipboard: ${email}`);
       setTimeout(() => setToast(""), 2500);
     } catch (err) {
       console.error("Copy failed:", err);
