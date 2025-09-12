@@ -140,15 +140,20 @@ export function Experience() {
                       transition={{ duration: 0.8, ease: "easeOut", delay: i * 0.3 }}
                       className="flex-shrink-0 order-[-1] sm:order-none"
                     >
-                      <div className="w-16 h-16 sm:w-24 sm:h-24 rounded-xl border-2 border-blue-400/60 bg-white/10 shadow-md overflow-hidden mx-auto sm:mx-0 flex items-center justify-center">
-                        <Image
-                          src={exp.logo}
-                          alt={`${exp.org} logo`}
-                          width={112}
-                          height={112}
-                          className="object-contain w-full h-full"
-                        />
-                      </div>
+                      <div
+                      className={`w-16 h-16 sm:w-24 sm:h-24 rounded-xl shadow-md overflow-hidden 
+                                  mx-auto sm:mx-0 flex items-center justify-center
+                                  ${exp.logo === "/gt.png" ? "bg-white border-gray-300" : "bg-white/10 border-blue-400/60"}`}
+                    >
+                      <Image
+                        src={exp.logo}
+                        alt={`${exp.org} logo`}
+                        width={112}
+                        height={112}
+                        className="object-contain w-full h-full"
+                      />
+                    </div>
+
                     </motion.div>
 
                     {/* Card */}
