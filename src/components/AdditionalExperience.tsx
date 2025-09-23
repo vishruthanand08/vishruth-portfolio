@@ -1,14 +1,7 @@
 "use client";
 
-import { motion, useMotionValue } from "framer-motion";
+import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
-
-
-interface CardRotateProps {
-  children: React.ReactNode;
-  onSendToBack: () => void;
-  sensitivity: number;
-}
 
 function useIsMobile() {
   const [isMobile, setIsMobile] = useState(false);
@@ -22,42 +15,11 @@ function useIsMobile() {
   return isMobile;
 }
 
-function CardRotate({ children, onSendToBack, sensitivity }: CardRotateProps) {
-  const isMobile = useIsMobile();
-  const x = useMotionValue(0);
-  const y = useMotionValue(0);
-
-  function handleDragEnd(_: never, info: { offset: { x: number; y: number } }) {
-    if (
-      Math.abs(info.offset.x) > sensitivity ||
-      Math.abs(info.offset.y) > sensitivity
-    ) {
-      onSendToBack();
-    } else {
-      x.set(0);
-      y.set(0);
-    }
-  }
-
-  return (
-    <motion.div
-      className="sm:absolute max-sm:static cursor-grab max-sm:cursor-default"
-      style={{ x, y }}
-      drag={!isMobile}
-      dragConstraints={{ top: 0, right: 0, bottom: 0, left: 0 }}
-      dragElastic={0.5}
-      whileTap={{ cursor: "grabbing" }}
-      onDragEnd={handleDragEnd}
-    >
-      {children}
-    </motion.div>
-  );
-}
-
 export default function AdditionalExperience() {
   const [visible, setVisible] = useState(false);
   const [typedHeader, setTypedHeader] = useState("");
   const [showCards, setShowCards] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const isMobile = useIsMobile();
 
   useEffect(() => {
@@ -84,7 +46,7 @@ export default function AdditionalExperience() {
     return () => clearInterval(id);
   }, [visible]);
 
-  const [cards, setCards] = useState([
+  const cards = [
     {
       id: 1,
       title: "Research Intern",
@@ -144,16 +106,14 @@ export default function AdditionalExperience() {
       ],
       logo: "/kss.png",
     },
-  ]);
+  ];
 
-  const sendToBack = (id: number) => {
-    setCards((prev) => {
-      const newCards = [...prev];
-      const index = newCards.findIndex((card) => card.id === id);
-      const [card] = newCards.splice(index, 1);
-      newCards.unshift(card);
-      return newCards;
-    });
+  const nextCard = () => {
+    setCurrentIndex((prev) => (prev + 1) % cards.length);
+  };
+
+  const prevCard = () => {
+    setCurrentIndex((prev) => (prev - 1 + cards.length) % cards.length);
   };
 
   if (!visible) return null;
@@ -175,91 +135,79 @@ export default function AdditionalExperience() {
       {showCards && (
         <motion.div
           className="relative flex flex-col items-center w-full max-w-[700px] min-h-[700px]"
-          style={{ perspective: 1200 }}
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 1.2, ease: "easeOut" }}
         >
-          {cards.map((card, index) => (
-            <CardRotate
-              key={card.id}
-              onSendToBack={() => sendToBack(card.id)}
-              sensitivity={200}
-            >
-              <motion.div
-                className="rounded-2xl border-2 border-purple-500/70 bg-black 
-                           p-6 sm:p-10 shadow-lg text-white 
-                           hover:shadow-[0_0_60px_rgba(59,130,246,0.9)] flex flex-col justify-between h-full
-                           max-sm:w-full max-sm:h-[480px]"
-                animate={{
-                  scale:
-                    window.innerWidth < 640
-                      ? 1
-                      : 1 + index * 0.02 - cards.length * 0.02,
-                  y: window.innerWidth < 640 ? 0 : index * 12,
-                }}
-                initial={false}
-                transition={{ type: "spring", stiffness: 260, damping: 25 }}
-                style={{
-                  width: "100%",
-                  maxWidth: 700,
-                  minHeight: 600, // ✅ all cards same height
-                }}
-              >
-                <div className="flex flex-col justify-between h-full">
-                  <div>
-                    <h3 className="text-2xl sm:text-4xl font-bold mb-4 sm:mb-6">
-                      {card.title}
-                    </h3>
-                    <p className="text-lg sm:text-xl italic text-blue-300 mb-6 sm:mb-8">
-                      {card.org} • {card.date}
-                    </p>
-                    <ul className="list-disc space-y-2 sm:space-y-4 pl-5 sm:pl-6 text-base sm:text-xl text-gray-200 leading-relaxed">
-                      {card.bullets.map((b, i) => (
-                        <li key={i}>{b}</li>
-                      ))}
-                    </ul>
+          {/* Current card */}
+          <motion.div
+            key={cards[currentIndex].id}
+            className="rounded-2xl border-2 border-purple-500/70 bg-black 
+                       p-6 sm:p-10 shadow-lg text-white 
+                       flex flex-col justify-between h-full
+                       max-sm:w-full max-sm:h-[480px]"
+            initial={{ opacity: 0, x: 100 }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: -100 }}
+            transition={{ type: "spring", stiffness: 260, damping: 25 }}
+            style={{ width: "100%", maxWidth: 700, minHeight: 600 }}
+          >
+            <div className="flex flex-col justify-between h-full">
+              <div>
+                <h3 className="text-2xl sm:text-4xl font-bold mb-4 sm:mb-6">
+                  {cards[currentIndex].title}
+                </h3>
+                <p className="text-lg sm:text-xl italic text-blue-300 mb-6 sm:mb-8">
+                  {cards[currentIndex].org} • {cards[currentIndex].date}
+                </p>
+                <ul className="list-disc space-y-2 sm:space-y-4 pl-5 sm:pl-6 text-base sm:text-xl text-gray-200 leading-relaxed">
+                  {cards[currentIndex].bullets.map((b, i) => (
+                    <li key={i}>{b}</li>
+                  ))}
+                </ul>
+              </div>
+              <div className="mt-6 sm:mt-10 flex flex-col items-center justify-center gap-4 sm:gap-6">
+                {cards[currentIndex].logo && (
+                  <img
+                    src={cards[currentIndex].logo}
+                    alt={`${cards[currentIndex].org} logo`}
+                    className="h-20 sm:h-40 w-auto object-contain mx-auto"
+                  />
+                )}
+                {cards[currentIndex].links && (
+                  <div className="flex gap-6 sm:gap-12 flex-wrap justify-center">
+                    {cards[currentIndex].links.map((link, i) => (
+                      <a
+                        key={i}
+                        href={link.href}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-base sm:text-2xl font-bold text-blue-400 hover:text-blue-200 transition"
+                      >
+                        {link.label}
+                      </a>
+                    ))}
                   </div>
-                  <div className="mt-6 sm:mt-10 flex flex-col items-center justify-center gap-4 sm:gap-6">
-                    {card.logo && (
-                      <img
-                        src={card.logo}
-                        alt={`${card.org} logo`}
-                        className="h-20 sm:h-40 w-auto object-contain mx-auto"
-                      />
-                    )}
-                    {card.links && (
-                      <div className="flex gap-6 sm:gap-12 flex-wrap justify-center">
-                        {card.links.map((link, i) => (
-                          <a
-                            key={i}
-                            href={link.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-base sm:text-2xl font-bold text-blue-400 hover:text-blue-200 transition"
-                          >
-                            {link.label}
-                          </a>
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              </motion.div>
-            </CardRotate>
-          ))}
+                )}
+              </div>
+            </div>
+          </motion.div>
 
-          {!isMobile && (
-            <motion.p
-              className="absolute -bottom-16 sm:-bottom-12 text-gray-400 text-base sm:text-2xl italic"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1.5, repeat: Infinity, repeatType: "reverse" }}
+          {/* Arrow Controls */}
+          <div className="flex items-center justify-center gap-12 mt-8">
+            <button
+              onClick={prevCard}
+              className="text-3xl sm:text-5xl text-gray-400 hover:text-blue-400 transition"
             >
-              ↔ drag to explore
-            </motion.p>
-          )}
-
+              ◀
+            </button>
+            <button
+              onClick={nextCard}
+              className="text-3xl sm:text-5xl text-gray-400 hover:text-blue-400 transition"
+            >
+              ▶
+            </button>
+          </div>
         </motion.div>
       )}
     </section>
