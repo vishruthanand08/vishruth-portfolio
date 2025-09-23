@@ -103,7 +103,7 @@ export default function ProjectsGrid() {
       {showGrid && (
         <div className="flex flex-col items-center gap-12 w-full max-w-7xl">
           {/* Top row (3 cards) */}
-          <div className="ml-32 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 w-full justify-items-center">
+          <div className="lg:ml-32 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 w-full justify-items-center">
             {projects.slice(0, 3).map((project, i) => (
               <motion.div
                 key={i}
