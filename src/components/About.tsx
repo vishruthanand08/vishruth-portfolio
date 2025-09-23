@@ -74,11 +74,7 @@ export function About() {
 
           {/* About Me Text */}
           <p className="mt-6 max-w-2xl text-center text-xl  leading-relaxed tracking-wide text-gray-300 font-inter">
-            Hi, I’m Vishruth, a CS major at Georgia Tech with a FinTech minor,
-            originally from Arizona. For me, CS is where structure meets freedom,
-             it pushes me to think with precision while giving me the space to
-            turn ideas into reality. Down the line, I see myself working in SWE
-            or quant and eventually launching something of my own.
+          Hi, I’m Vishruth, a Computer Science major at Georgia Tech with a FinTech minor, originally from Arizona. For me, CS is where structure meets freedom, it pushes me to think with precision while also giving me the space to turn ideas into reality. I’m especially drawn to fields that consistently challenge me with tough problems in fast-moving environments. Looking ahead, I see myself working in SWE or quant and eventually launching something of my own.
           </p>
         </motion.div>
       )}
