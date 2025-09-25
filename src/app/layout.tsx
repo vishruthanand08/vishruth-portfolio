@@ -15,6 +15,9 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Vishruth Anand | Portfolio",
   description: "Personal portfolio of Vishruth Anand",
+  icons: {
+  icon: "/icon2.png",
+  },
 };
 
 export default function RootLayout({
