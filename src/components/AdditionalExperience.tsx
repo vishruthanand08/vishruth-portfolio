@@ -106,6 +106,20 @@ export default function AdditionalExperience() {
       ],
       logo: "/kss.png",
     },
+      {
+    id: 6,
+    title: "Code for Good Hackathon",
+    org: "JPMorgan Chase",
+    date: "Oct 2025",
+    bullets: [
+      "Engineered a full-stack React + Spring Boot platform for International Girls Academy, transforming their outreach with scalable program management and high-engagement learning tools.",
+
+      "Built secure auth, role-based dashboards, personalized course progression, and interactive modules that significantly improved usability for students and staff.",
+
+    ],
+    logo: "/jpm.jpeg",
+  },
+
   ];
 
   const nextCard = () => {
