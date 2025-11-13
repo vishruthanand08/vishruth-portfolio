@@ -27,6 +27,14 @@ const projects = [
     paper: "/spy.pdf",
   },
   {
+    title: "Overnight Volatility Forecasting",
+    description:
+      "A quantitative research project analyzing whether overnight price gaps predict next-day realized volatility in SPY. Includes 20 years of data, volatility estimators, OLS regression, GARCH modeling, and rolling correlation analysis.",
+    skills: ["Python", "Pandas", "Statsmodels", "GARCH", "Quant Research"],
+    link: "https://github.com/vishruthanand08/overnight-return-volatility",
+    paper: "/overnight.pdf",
+  },
+  {
     title: "The Walk of Fire",
     description:
       "A Game Boy Advance adventure written in C where players guide their soul through waves of fire to reach salvation. Features dynamic fireball patterns, karma-based scoring, and an unlockable Impossible Mode.",
@@ -49,7 +57,6 @@ export default function ProjectsGrid() {
   const [typedHeader, setTypedHeader] = useState("");
   const [showGrid, setShowGrid] = useState(false);
 
-  // Wait until Experience finishes
   useEffect(() => {
     const handler = () => {
       setTimeout(() => setVisible(true), 1500);
@@ -64,7 +71,6 @@ export default function ProjectsGrid() {
     };
   }, []);
 
-  // Typing effect for header
   useEffect(() => {
     if (!visible) return;
     let i = 0;
@@ -99,17 +105,17 @@ export default function ProjectsGrid() {
         {typedHeader}
       </motion.h2>
 
-      {/* Grid */}
+      {/* Unified Grid */}
       {showGrid && (
-        <div className="flex flex-col items-center gap-12 w-full max-w-7xl">
-          {/* Top row (3 cards) */}
-          <div className="lg:ml-32 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 w-full justify-items-center">
-            {projects.slice(0, 3).map((project, i) => (
+        <div className="w-full max-w-7xl xl:ml-24"> 
+          {/* SHIFT RIGHT on desktop to avoid sidebar overlap */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 justify-items-center">
+            {projects.map((project, i) => (
               <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: i * 0.2 }}
+                transition={{ duration: 0.6, delay: i * 0.15 }}
                 className="relative rounded-2xl border-2 border-purple-500/70 
                            shadow-[0_0_25px_rgba(168,85,247,0.8)] bg-black/50 p-8 backdrop-blur-md 
                            flex flex-col justify-between hover:shadow-[0_0_40px_rgba(59,130,246,0.9)] 
@@ -118,62 +124,11 @@ export default function ProjectsGrid() {
                 <h3 className="text-2xl font-semibold text-white mb-3">
                   {project.title}
                 </h3>
-                <p className="text-lg text-gray-300 mb-4">
-                  {project.description}
-                </p>
-                <div className="flex flex-wrap gap-2 mb-4">
-                  {project.skills.map((skill, idx) => (
-                    <span
-                      key={idx}
-                      className="px-3 py-1 text-sm rounded-full bg-purple-600/30 text-purple-200 font-medium"
-                    >
-                      {skill}
-                    </span>
-                  ))}
-                </div>
-                <div className="flex gap-6">
-                  <a
-                    href={project.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-lg font-semibold text-blue-400 hover:text-blue-200 transition"
-                  >
-                    View Project →
-                  </a>
-                  {project.paper && (
-                    <a
-                      href={project.paper}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-lg font-semibold text-blue-400 hover:text-blue-200 transition"
-                    >
-                      View Paper →
-                    </a>
-                  )}
-                </div>
-              </motion.div>
-            ))}
-          </div>
 
-          {/* Bottom row (centered 2 cards) */}
-          <div className="flex flex-col sm:flex-row justify-center gap-10 sm:gap-20 mt-10 w-full items-center">
-            {projects.slice(3).map((project, i) => (
-              <motion.div
-                key={i + 3}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: (i + 3) * 0.2 }}
-                className="relative rounded-2xl border-2 border-purple-500/70 
-                           shadow-[0_0_25px_rgba(168,85,247,0.8)] bg-black/50 p-8 backdrop-blur-md 
-                           flex flex-col justify-between hover:shadow-[0_0_40px_rgba(59,130,246,0.9)] 
-                           transition-shadow w-full max-w-[380px] min-h-[320px]"
-              >
-                <h3 className="text-2xl font-semibold text-white mb-3">
-                  {project.title}
-                </h3>
                 <p className="text-lg text-gray-300 mb-4">
                   {project.description}
                 </p>
+
                 <div className="flex flex-wrap gap-2 mb-4">
                   {project.skills.map((skill, idx) => (
                     <span
@@ -184,6 +139,7 @@ export default function ProjectsGrid() {
                     </span>
                   ))}
                 </div>
+
                 <div className="flex gap-6">
                   <a
                     href={project.link}
@@ -193,6 +149,7 @@ export default function ProjectsGrid() {
                   >
                     View Project →
                   </a>
+
                   {project.paper && (
                     <a
                       href={project.paper}
