@@ -119,6 +119,22 @@ export default function AdditionalExperience() {
     ],
     logo: "/jpm.jpeg",
   },
+  {
+  id: 7,
+  title: "WaitWhat",
+  org: "NexHacks 2026 (2x Winner)",
+  date: "Jan 2026",
+  bullets: [
+    "Built a low-latency AI lecture copilot that streams live microphone audio for real-time transcription and in-class LLM Q&A, generating personalized notes, quizzes, and instructor insights.",
+    "Engineered a full-stack system (React, Node.js, Convex, LiveKit, Gemini) to process long lecture sessions, detect confusion spikes, extract key concepts, and surface engagement trends.",
+    "Designed a transcript chunking + compression pipeline reducing prompt token usage ~70% while preserving real-time responsiveness for extended sessions.",
+  ],
+  logo: "/waitwhat.jpeg",
+  links: [
+    { label: "Devpost →", href: "https://devpost.com/software/wait-what" },
+    { label: "Website →", href: "https://waitwhat.tech" },
+  ],
+}
 
   ];
 
