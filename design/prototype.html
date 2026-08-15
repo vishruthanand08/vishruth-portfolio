@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark" data-structure="single" data-view="home">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Vishruth Anand — redesign prototype</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --f-display:'Archivo',system-ui,sans-serif;
+  --f-body:'Archivo',system-ui,sans-serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,monospace;
+  --t-xs:11px; --t-sm:13px; --t-base:15px; --t-md:17px;
+  --t-lg:21px; --t-xl:30px; --t-2xl:clamp(34px,6vw,58px);
+  --s1:4px; --s2:8px; --s3:12px; --s4:16px; --s5:24px;
+  --s6:32px; --s7:48px; --s8:72px; --s9:112px;
+  --measure:66ch; --shell:1080px; --rail:34px;
+}
+html[data-theme="dark"]{
+  --bg:#0D1014; --surface:#141920; --line:#232A33; --line-soft:#1A2028;
+  --ink:#E8E6E1; --ink-2:#B4BBC4; --muted:#78838F; --accent:#D9A441;
+}
+html[data-theme="light"]{
+  --bg:#FBFAF7; --surface:#FFFFFF; --line:#E1DDD5; --line-soft:#EDEAE3;
+  --ink:#14181C; --ink-2:#3E464F; --muted:#6E7681; --accent:#8A5D0B;
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--f-body);
+  font-size:var(--t-base);line-height:1.6;-webkit-font-smoothing:antialiased;
+  transition:background .25s ease,color .25s ease}
+a{color:inherit}
+h1,h2,h3{margin:0;font-family:var(--f-display);font-weight:600;line-height:1.1;letter-spacing:-.02em}
+p{margin:0}
+ul{margin:0;padding:0;list-style:none}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.shell{max-width:var(--shell);margin:0 auto;padding:0 var(--s5)}
+
+/* prototype chrome */
+.proto{position:sticky;top:0;z-index:100;display:flex;flex-wrap:wrap;gap:var(--s4);
+  align-items:center;padding:var(--s3) var(--s5);background:var(--surface);
+  border-bottom:1px solid var(--line);font-family:var(--f-mono);font-size:var(--t-xs);
+  letter-spacing:.08em;text-transform:uppercase}
+.proto__tag{color:var(--accent);margin-right:auto}
+.proto__grp{display:flex;align-items:center;gap:var(--s2)}
+.proto__lbl{color:var(--muted)}
+.seg{display:flex;border:1px solid var(--line);border-radius:2px;overflow:hidden}
+.seg button{padding:5px 11px;color:var(--muted);letter-spacing:.06em}
+.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+
+/* header */
+.site{border-bottom:1px solid var(--line)}
+.site__in{display:flex;align-items:baseline;gap:var(--s5);padding:var(--s5) 0}
+.site__name{font-size:var(--t-sm);font-weight:600;letter-spacing:.14em;text-transform:uppercase}
+.site__nav{display:flex;gap:var(--s5);margin-left:auto;font-family:var(--f-mono);font-size:var(--t-sm)}
+.site__nav a{color:var(--muted);text-decoration:none;padding-bottom:2px;border-bottom:1px solid transparent}
+.site__nav a:hover{color:var(--ink)}
+.site__nav a[aria-current="page"]{color:var(--ink);border-bottom-color:var(--accent)}
+
+/* hero */
+.hero{padding:var(--s9) 0 var(--s8)}
+.hero h1{font-size:var(--t-2xl);font-weight:700}
+.hero__type{margin-top:var(--s3);font-family:var(--f-mono);font-size:clamp(15px,2.4vw,22px);
+  color:var(--accent);letter-spacing:-.01em;min-height:1.4em}
+.caret{display:inline-block;width:.55em;background:var(--accent);color:transparent;
+  animation:blink 1s steps(1) infinite;margin-left:2px}
+@keyframes blink{50%{opacity:0}}
+.hero__links{display:flex;flex-wrap:wrap;gap:var(--s5);margin-top:var(--s7);
+  font-family:var(--f-mono);font-size:var(--t-sm)}
+.hero__links a{color:var(--ink);text-decoration:none;border-bottom:1px solid var(--line);
+  padding-bottom:3px;transition:border-color .15s ease,color .15s ease}
+.hero__links a:hover{border-bottom-color:var(--accent);color:var(--accent)}
+.hero__links .arw{color:var(--muted);margin-left:5px}
+
+/* sections */
+.sec{padding:var(--s8) 0;border-top:1px solid var(--line)}
+.sec__head{display:flex;align-items:baseline;gap:var(--s4);margin-bottom:var(--s6);
+  font-family:var(--f-mono);font-size:var(--t-xs);letter-spacing:.14em;text-transform:uppercase}
+.sec__head .t{color:var(--ink)}
+.sec__head .meta{margin-left:auto;color:var(--muted)}
+
+/* education — inline in hero */
+.hero__edu{margin-top:var(--s6);max-width:52ch;border-top:1px solid var(--line)}
+.hero__edu li{display:grid;grid-template-columns:1fr auto;gap:var(--s4);
+  align-items:baseline;padding:var(--s3) 0;border-bottom:1px solid var(--line)}
+.hero__edu .deg{font-size:var(--t-base);font-weight:500;color:var(--ink)}
+.hero__edu .min{color:var(--muted)}
+.hero__edu .when{font-family:var(--f-mono);font-size:var(--t-sm);color:var(--muted);
+  white-space:nowrap;font-variant-numeric:tabular-nums}
+
+/* rows */
+.rows{border-top:1px solid var(--line)}
+.row{border-bottom:1px solid var(--line)}
+.row__btn{display:grid;grid-template-columns:var(--rail) 1fr auto;gap:var(--s4);
+  align-items:baseline;width:100%;text-align:left;padding:var(--s5) 0;transition:background .15s ease}
+.row__btn:hover{background:var(--line-soft)}
+.row__btn:hover .row__title{color:var(--accent)}
+.row__idx{font-family:var(--f-mono);font-size:var(--t-sm);color:var(--muted)}
+.row__title{font-size:var(--t-lg);font-weight:600;letter-spacing:-.015em;transition:color .15s ease}
+.row__sub{margin-top:var(--s2);font-family:var(--f-mono);font-size:var(--t-sm);color:var(--muted)}
+.row__right{font-family:var(--f-mono);font-size:var(--t-sm);color:var(--muted);
+  white-space:nowrap;text-align:right;font-variant-numeric:tabular-nums}
+.row__right .sign{display:inline-block;width:1em;color:var(--accent)}
+.row__body{display:grid;grid-template-rows:0fr;transition:grid-template-rows .3s cubic-bezier(.4,0,.2,1)}
+.row[data-open="true"] .row__body{grid-template-rows:1fr}
+.row__inner{overflow:hidden}
+.row__pad{padding:0 0 var(--s6) calc(var(--rail) + var(--s4));max-width:calc(var(--measure) + var(--rail))}
+.bul li{position:relative;padding-left:var(--s4);color:var(--ink-2)}
+.bul li+li{margin-top:var(--s3)}
+.bul li::before{content:"";position:absolute;left:0;top:.72em;width:5px;height:1px;background:var(--muted)}
+.row__foot{display:flex;flex-wrap:wrap;gap:var(--s5);margin-top:var(--s5);
+  font-family:var(--f-mono);font-size:var(--t-sm)}
+.row__foot a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
+.row__foot a:hover{border-bottom-color:var(--accent)}
+.metrics{display:flex;flex-wrap:wrap;gap:var(--s7);margin-top:var(--s5)}
+.metric .n{display:block;font-family:var(--f-mono);font-size:var(--t-xl);font-weight:500;
+  letter-spacing:-.03em;color:var(--ink)}
+.metric .l{display:block;margin-top:var(--s1);font-family:var(--f-mono);font-size:var(--t-xs);
+  letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+
+.seeall{margin-top:var(--s5);font-family:var(--f-mono);font-size:var(--t-sm)}
+.seeall a{color:var(--accent);text-decoration:none;border-bottom:1px solid transparent}
+.seeall a:hover{border-bottom-color:var(--accent)}
+html[data-structure="multi"][data-view="work"] .seeall{display:none}
+
+/* about + interests */
+.prose{max-width:var(--measure);color:var(--ink-2)}
+.shots{display:grid;grid-template-columns:repeat(4,1fr);gap:var(--s3);margin-top:var(--s6)}
+.shot{aspect-ratio:4/3;border:1px solid var(--line);display:flex;align-items:center;
+  justify-content:center;font-family:var(--f-mono);font-size:var(--t-xs);color:var(--muted);
+  background:var(--line-soft)}
+.foot{border-top:1px solid var(--line);padding:var(--s7) 0 var(--s8);display:flex;
+  flex-wrap:wrap;gap:var(--s5);font-family:var(--f-mono);font-size:var(--t-sm);color:var(--muted)}
+.foot a{color:var(--muted);text-decoration:none}
+.foot a:hover{color:var(--accent)}
+.foot .sp{margin-left:auto}
+
+/* structure modes */
+html[data-structure="single"] [data-route]{display:block}
+html[data-structure="single"] .multi-only{display:none}
+html[data-structure="multi"] [data-route]{display:none}
+html[data-structure="multi"][data-view="home"] [data-route~="home"],
+html[data-structure="multi"][data-view="work"] [data-route~="work"],
+html[data-structure="multi"][data-view="about"] [data-route~="about"]{display:block}
+html[data-structure="multi"] .single-only{display:none}
+html[data-structure="multi"][data-view="home"] .row[data-rank="minor"]{display:none}
+
+@media (max-width:640px){
+  :root{--rail:26px;--s8:52px;--s9:64px}
+  .site__in{flex-wrap:wrap;gap:var(--s3)}
+  .site__nav{margin-left:0;gap:var(--s4);width:100%}
+  .row__btn{grid-template-columns:var(--rail) 1fr;row-gap:var(--s2)}
+  .row__right{grid-column:2;text-align:left}
+  .metrics{gap:var(--s5)}
+  .proto{font-size:10px;gap:var(--s3)}
+  .shots{grid-template-columns:repeat(2,1fr)}
+}
+@media (prefers-reduced-motion:reduce){
+  *{transition-duration:.01ms !important;animation:none !important}
+}
+</style>
+</head>
+<body>
+
+<div class="proto">
+  <span class="proto__tag">Prototype</span>
+  <div class="proto__grp">
+    <span class="proto__lbl">Structure</span>
+    <div class="seg" id="segStructure">
+      <button data-structure="single" aria-pressed="true">Single page</button>
+      <button data-structure="multi" aria-pressed="false">Routes</button>
+    </div>
+  </div>
+  <div class="proto__grp">
+    <span class="proto__lbl">Theme</span>
+    <div class="seg" id="segTheme">
+      <button data-theme="dark" aria-pressed="true">Dark</button>
+      <button data-theme="light" aria-pressed="false">Light</button>
+    </div>
+  </div>
+</div>
+
+<header class="site">
+  <div class="shell site__in">
+    <span class="site__name">Vishruth Anand</span>
+    <nav class="site__nav" id="nav">
+      <a href="#work" data-nav="work">Work</a>
+      <a href="#experience" data-nav="work" class="single-only">Experience</a>
+      <a href="#about" data-nav="about">About</a>
+      <a href="#" data-nav="ext">Resume <span aria-hidden="true">&#8599;</span></a>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<section class="hero shell" data-route="home">
+  <h1>Software Engineer</h1>
+  <p class="hero__type"><span id="typed"></span><span class="caret" id="caret">&nbsp;</span></p>
+
+  <ul class="hero__edu">
+    <li>
+      <span class="deg">M.S. &mdash; degree name TBC</span>
+      <span class="when">Jan 2026 &ndash; Dec 2026</span>
+    </li>
+    <li>
+      <span class="deg">B.S. Computer Science <span class="min">&middot; FinTech minor</span></span>
+      <span class="when">Aug 2023 &ndash; Dec 2025</span>
+    </li>
+  </ul>
+
+  <div class="hero__links">
+    <a href="#">Resume <span class="arw" aria-hidden="true">&#8599;</span></a>
+    <a href="#">LinkedIn <span class="arw" aria-hidden="true">&#8599;</span></a>
+    <a href="#">GitHub <span class="arw" aria-hidden="true">&#8599;</span></a>
+    <a href="#">Contact</a>
+  </div>
+</section>
+
+<section class="sec shell" id="experience" data-route="home">
+  <div class="sec__head"><span class="t">Experience</span></div>
+  <div class="rows">
+
+    <article class="row" data-open="true">
+      <button class="row__btn" aria-expanded="true">
+        <span class="row__idx">01</span>
+        <span><span class="row__title">Software Engineering Intern</span>
+          <span class="row__sub">Amazon Web Services</span></span>
+        <span class="row__right"><span class="sign">&minus;</span> Summer 2025</span>
+      </button>
+      <div class="row__body"><div class="row__inner"><div class="row__pad">
+        <ul class="bul">
+          <li>Built a high-performance video overlay redirection system for the DCV Web Client, supporting multi-monitor setups with 120 FPS rendering and 0.15 ms latency.</li>
+          <li>Developed a fault-tolerant communication layer between Chrome extension, proxy, and client to keep overlays stable during tab detachment and multi-display movement.</li>
+        </ul>
+        <div class="metrics">
+          <span class="metric"><span class="n">120</span><span class="l">FPS rendering</span></span>
+          <span class="metric"><span class="n">0.15 ms</span><span class="l">Latency</span></span>
+        </div>
+      </div></div></div>
+    </article>
+
+    <article class="row" data-open="false">
+      <button class="row__btn" aria-expanded="false">
+        <span class="row__idx">02</span>
+        <span><span class="row__title">Undergraduate Machine Learning Researcher</span>
+          <span class="row__sub">Georgia Tech VIP Program</span></span>
+        <span class="row__right"><span class="sign">+</span> Fall 2023 &ndash; Fall 2024</span>
+      </button>
+      <div class="row__body"><div class="row__inner"><div class="row__pad">
+        <ul class="bul">
+          <li>Built a MuseScore plugin that integrated transformer-based music generation, enabling AI-assisted composition with real-time melody generation, style transfer, and sequence prediction.</li>
+          <li>Developed large-scale data pipelines and visualization tools, working with 550k+ MIDI files, Python, SQL, and transformer models to evaluate accuracy, latency, and output diversity.</li>
+        </ul>
+        <div class="metrics">
+          <span class="metric"><span class="n">550k+</span><span class="l">MIDI files</span></span>
+        </div>
+      </div></div></div>
+    </article>
+
+    <article class="row" data-open="false">
+      <button class="row__btn" aria-expanded="false">
+        <span class="row__idx">03</span>
+        <span><span class="row__title">Software Engineering Intern</span>
+          <span class="row__sub">PyPs</span></span>
+        <span class="row__right"><span class="sign">+</span> Summer 2024</span>
+      </button>
+      <div class="row__body"><div class="row__inner"><div class="row__pad">
+        <ul class="bul">
+          <li>Built and shipped a Chrome extension that automated LinkedIn post and comment engagement with Gemini, cutting manual outreach time and boosting reply rates.</li>
+          <li>Developed full-stack integrations across LinkedIn, Gemini, and AWS Amplify APIs, using Node.js, Express, and React/TypeScript to support advanced features like personalized comments and history tracking.</li>
+        </ul>
+      </div></div></div>
+    </article>
+
+  </div>
+</section>
+
+<section class="sec shell" id="work" data-route="home work">
+  <div class="sec__head"><span class="t">Projects</span>
+    <span class="meta multi-only">6 projects</span></div>
+  <div class="rows">
+
+    <article class="row" data-open="false" data-rank="major">
+      <button class="row__btn" aria-expanded="false">
+        <span class="row__idx">01</span>
+        <span><span class="row__title">IV Skew Trading Strategy</span>
+          <span class="row__sub">Python &middot; Pandas &middot; Scikit-learn &middot; Quant Finance</span></span>
+        <span class="row__right"><span class="sign">+</span></span>
+      </button>
+      <div class="row__body"><div class="row__inner"><div class="row__pad">
+        <p class="prose">A statistical arbitrage project using volatility skew and VIX term structure to forecast SPY returns. Combined rule-based signals with logistic regression in a volatility-targeted framework.</p>
+        <div class="row__foot"><a href="#">View Project &#8594;</a><a href="#">View Paper &#8594;</a></div>
+      </div></div></div>
+    </article>
+
+    <article class="row" data-open="false" data-rank="major">
+      <button class="row__btn" aria-expanded="false">
+        <span class="row__idx">02</span>
+        <span><span class="row__title">Overnight Volatility Forecasting</span>
+          <span class="row__sub">Python &middot; Pandas &middot; Statsmodels &middot; GARCH &middot; Quant Research</span></span>
+        <span class="row__right"><span class="sign">+</span></span>
+      </button>
+      <div class="row__body"><div class="row__inner"><div class="row__pad">
+        <p class="prose">A quantitative research project analyzing whether overnight price gaps predict next-day realized volatility in SPY. Includes 20 years of data, volatility estimators, OLS regression, GARCH modeling, and rolling correlation analysis.</p>
+        <div class="row__foot"><a href="#">View Project &#8594;</a><a href="#">View Paper &#8594;</a></div>
+      </div></div></div>
+    </article>
+
+    <article class="row" data-open="false" data-rank="major">
+      <button class="row__btn" aria-expanded="false">
+        <span class="row__idx">03</span>
+        <span><span class="row__title">Spotify Song Success Prediction</span>
+          <span class="row__sub">Python &middot; XGBoost &middot; Scikit-learn &middot; Data Preprocessing</span></span>
+        <span class="row__right"><span class="sign">+</span></span>
+      </button>
+      <div class="row__body"><div class="row__inner"><div class="row__pad">
+        <p class="prose">Machine learning project predicting chart longevity of Spotify Top 50 songs using audio features and YouTube engagement data. Built preprocessing pipelines, engineered collaboration and virality features, and trained models including XGBoost.</p>
+        <div class="row__foot"><a href="#">View Project &#8594;</a><a href="#">View Paper &#8594;</a></div>
+      </div></div></div>
+    </article>
+
+    <article class="row" data-open="false" data-rank="minor">
+      <button class="row__btn" aria-expanded="false">
+        <span class="row__idx">04</span>
+        <span><span class="row__title">Freelancer Escrow Smart Contract</span>
+          <span class="row__sub">Solidity &middot; Hardhat &middot; Ethers.js &middot; IPFS</span></span>
+        <span class="row__right"><span class="sign">+</span></span>
+      </button>
+      <div class="row__body"><div class="row__inner"><div class="row__pad">
+        <p class="prose">A decentralized Ethereum contract for milestone-based payments between clients and freelancers. Includes trustless escrow deposits, IPFS-linked milestones, and mediator-based dispute resolution.</p>
+        <div class="row__foot"><a href="#">View Project &#8594;</a></div>
+      </div></div></div>
+    </article>
+
+    <article class="row" data-open="false" data-rank="minor">
+      <button class="row__btn" aria-expanded="false">
+        <span class="row__idx">05</span>
+        <span><span class="row__title">The Walk of Fire</span>
+          <span class="row__sub">C &middot; Game Boy Advance &middot; State Machines &middot; Docker</span></span>
+        <span class="row__right"><span class="sign">+</span></span>
+      </button>
+      <div class="row__body"><div class="row__inner"><div class="row__pad">
+        <p class="prose">A Game Boy Advance adventure written in C where players guide their soul through waves of fire to reach salvation. Features dynamic fireball patterns, karma-based scoring, and an unlockable Impossible Mode.</p>
+        <div class="row__foot"><a href="#">View Project &#8594;</a></div>
+      </div></div></div>
+    </article>
+
+    <article class="row" data-open="false" data-rank="minor">
+      <button class="row__btn" aria-expanded="false">
+        <span class="row__idx">06</span>
+        <span><span class="row__title">GreenPlate</span>
+          <span class="row__sub">Java &middot; Android Studio &middot; Firebase &middot; UI/UX</span></span>
+        <span class="row__right"><span class="sign">+</span></span>
+      </button>
+      <div class="row__body"><div class="row__inner"><div class="row__pad">
+        <p class="prose">An Android app that helps people manage meals, recipes, and pantry items with real-time syncing and a clean, interactive design.</p>
+        <div class="row__foot"><a href="#">View Project &#8594;</a></div>
+      </div></div></div>
+    </article>
+
+  </div>
+  <p class="seeall multi-only"><a href="#" data-nav="work">See all projects and additional experience &#8594;</a></p>
+</section>
+
+<section class="sec shell" id="additional" data-route="work">
+  <div class="sec__head"><span class="t">Additional Experience</span></div>
+  <div class="rows">
+
+    <article class="row" data-open="false">
+      <button class="row__btn" aria-expanded="false">
+        <span class="row__idx">01</span>
+        <span><span class="row__title">WaitWhat</span>
+          <span class="row__sub">NexHacks 2026 (2x Winner)</span></span>
+        <span class="row__right"><span class="sign">+</span> Jan 2026</span>
+      </button>
+      <div class="row__body"><div class="row__inner"><div class="row__pad">
+        <ul class="bul">
+          <li>Built a low-latency AI lecture copilot that streams live microphone audio for real-time transcription and in-class LLM Q&amp;A, generating personalized notes, quizzes, and instructor insights.</li>
+          <li>Engineered a full-stack system (React, Node.js, Convex, LiveKit, Gemini) to process long lecture sessions, detect confusion spikes, extract key concepts, and surface engagement trends.</li>
+          <li>Designed a transcript chunking + compression pipeline reducing prompt token usage ~70% while preserving real-time responsiveness for extended sessions.</li>
+        </ul>
+        <div class="row__foot"><a href="#">Devpost &#8594;</a><a href="#">Website &#8594;</a></div>
+      </div></div></div>
+    </article>
+
+    <article class="row" data-open="false">
+      <button class="row__btn" aria-expanded="false">
+        <span class="row__idx">02</span>
+        <span><span class="row__title">Code for Good Hackathon</span>
+          <span class="row__sub">JPMorgan Chase</span></span>
+        <span class="row__right"><span class="sign">+</span> Oct 2025</span>
+      </button>
+      <div class="row__body"><div class="row__inner"><div class="row__pad">
+        <ul class="bul">
+          <li>Engineered a full-stack React + Spring Boot platform for International Girls Academy, transforming their outreach with scalable program management and high-engagement learning tools.</li>
+          <li>Built secure auth, role-based dashboards, personalized course progression, and interactive modules that significantly improved usability for students and staff.</li>
+        </ul>
+      </div></div></div>
+    </article>
+
+    <article class="row" data-open="false">
+      <button class="row__btn" aria-expanded="false">
+        <span class="row__idx">03</span>
+        <span><span class="row__title">Peer Tutor</span>
+          <span class="row__sub">Knack, Georgia Tech</span></span>
+        <span class="row__right"><span class="sign">+</span> 2023 &ndash; Present</span>
+      </button>
+      <div class="row__body"><div class="row__inner"><div class="row__pad">
+        <ul class="bul">
+          <li>Tutored undergrads in CS and Math courses including DSA, Linear Algebra, and OOP.</li>
+          <li>Completed 300+ hours of one-on-one sessions with 4.98/5 rating.</li>
+        </ul>
+        <div class="metrics">
+          <span class="metric"><span class="n">300+</span><span class="l">Hours</span></span>
+          <span class="metric"><span class="n">4.98/5</span><span class="l">Rating</span></span>
+        </div>
+      </div></div></div>
+    </article>
+
+    <article class="row" data-open="false">
+      <button class="row__btn" aria-expanded="false">
+        <span class="row__idx">04</span>
+        <span><span class="row__title">Grand Treasurer</span>
+          <span class="row__sub">Kappa Sigma Fraternity</span></span>
+        <span class="row__right"><span class="sign">+</span> Nov 2024 &ndash; Present</span>
+      </button>
+      <div class="row__body"><div class="row__inner"><div class="row__pad">
+        <ul class="bul">
+          <li>Manage six-figure budgets, dues, and tax filings for 100+ members.</li>
+          <li>Develop policies to optimize cash flow and sustain chapter growth.</li>
+        </ul>
+      </div></div></div>
+    </article>
+
+    <article class="row" data-open="false">
+      <button class="row__btn" aria-expanded="false">
+        <span class="row__idx">05</span>
+        <span><span class="row__title">Research Intern</span>
+          <span class="row__sub">KEYS Program, University of Arizona</span></span>
+        <span class="row__right"><span class="sign">+</span> Summer 2022</span>
+      </button>
+      <div class="row__body"><div class="row__inner"><div class="row__pad">
+        <ul class="bul">
+          <li>Conducted hippocampal subfield analysis on MRI scans of neurotypical and Down syndrome youth using ITK-Snap and R.</li>
+          <li>Contributed to a forthcoming publication and presented results at the AZBio Awards, gaining experience in neuroimaging, data analysis, and scientific communication.</li>
+        </ul>
+        <div class="row__foot"><a href="#">View Poster &#8594;</a><a href="#">Watch Video &#8594;</a></div>
+      </div></div></div>
+    </article>
+
+    <article class="row" data-open="false">
+      <button class="row__btn" aria-expanded="false">
+        <span class="row__idx">06</span>
+        <span><span class="row__title">Workshop Lead &amp; Teaching Assistant</span>
+          <span class="row__sub">East Valley Yamaha Music School</span></span>
+        <span class="row__right"><span class="sign">+</span> Jan 2021 &ndash; May 2023</span>
+      </button>
+      <div class="row__body"><div class="row__inner"><div class="row__pad">
+        <ul class="bul">
+          <li>Assisted weekly classes and workshops in piano and music theory.</li>
+          <li>Helped prepare students for grade exams through guided practice and group sessions.</li>
+        </ul>
+      </div></div></div>
+    </article>
+
+    <article class="row" data-open="false">
+      <button class="row__btn" aria-expanded="false">
+        <span class="row__idx">07</span>
+        <span><span class="row__title">Teacher &amp; Grader</span>
+          <span class="row__sub">Best Brains Learning Center</span></span>
+        <span class="row__right"><span class="sign">+</span> Dec 2021 &ndash; Mar 2023</span>
+      </button>
+      <div class="row__body"><div class="row__inner"><div class="row__pad">
+        <ul class="bul">
+          <li>Supported instructors by grading assignments and organizing classroom activities.</li>
+          <li>Reinforced lessons in math and English while tracking student progress.</li>
+        </ul>
+      </div></div></div>
+    </article>
+
+  </div>
+</section>
+
+<section class="sec shell" id="about" data-route="about">
+  <div class="sec__head"><span class="t">About Me</span></div>
+  <p class="prose">Hi, I&rsquo;m Vishruth, a Computer Science major at Georgia Tech with a FinTech minor, originally from Arizona. For me, CS is where structure meets freedom, it pushes me to think with precision while also giving me the space to turn ideas into reality. I&rsquo;m especially drawn to fields that consistently challenge me with tough problems in fast-moving environments. Looking ahead, I see myself working in SWE or quant and eventually launching something of my own.</p>
+</section>
+
+<section class="sec shell" id="interests" data-route="about">
+  <div class="sec__head"><span class="t">Interests</span></div>
+  <p class="prose">Outside of CS, I stay active with lifting, basketball, pickleball, and hiking, and keep creative through Carnatic music, piano, and DJing.</p>
+  <div class="shots">
+    <div class="shot">hiking.jpg</div>
+    <div class="shot">piano.jpg</div>
+    <div class="shot">running.jpg</div>
+    <div class="shot">dj.jpg</div>
+  </div>
+</section>
+
+</main>
+
+<footer class="foot shell">
+  <span>Vishruth Anand</span>
+  <span class="sp"><a href="#">Resume</a></span>
+  <a href="#">GitHub</a><a href="#">LinkedIn</a><a href="#">Email</a>
+</footer>
+
+<script>
+(function(){
+  var root=document.documentElement;
+
+  function wire(id,attr){
+    var box=document.getElementById(id);
+    box.addEventListener('click',function(e){
+      var b=e.target.closest('button'); if(!b) return;
+      root.setAttribute('data-'+attr,b.dataset[attr]);
+      box.querySelectorAll('button').forEach(function(x){
+        x.setAttribute('aria-pressed',String(x===b));
+      });
+      if(attr==='structure'){root.setAttribute('data-view','home');syncNav();}
+    });
+  }
+  wire('segStructure','structure');
+  wire('segTheme','theme');
+
+  var nav=document.getElementById('nav');
+  function syncNav(){
+    var multi=root.getAttribute('data-structure')==='multi';
+    var view=root.getAttribute('data-view');
+    nav.querySelectorAll('a').forEach(function(a){
+      a.setAttribute('aria-current',(multi&&a.dataset.nav===view)?'page':'false');
+    });
+  }
+  document.addEventListener('click',function(e){
+    var a=e.target.closest('a[data-nav]'); if(!a) return;
+    if(a.dataset.nav==='ext'){e.preventDefault();return;}
+    if(root.getAttribute('data-structure')!=='multi') return;
+    e.preventDefault();
+    root.setAttribute('data-view',a.dataset.nav);
+    syncNav();
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+  syncNav();
+
+  document.addEventListener('click',function(e){
+    var btn=e.target.closest('.row__btn'); if(!btn) return;
+    var row=btn.closest('.row');
+    var open=row.dataset.open!=='true';
+    row.dataset.open=String(open);
+    btn.setAttribute('aria-expanded',String(open));
+    var sign=btn.querySelector('.sign');
+    if(sign) sign.textContent=open?'\u2212':'+';
+  });
+
+  /* hero typing — polish only, gates nothing */
+  var TAG='CS @ Georgia Tech';
+  var el=document.getElementById('typed'), caret=document.getElementById('caret');
+  var reduce=window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduce){ el.textContent=TAG; caret.style.display='none'; }
+  else{
+    var i=0;
+    var id=setInterval(function(){
+      el.textContent=TAG.slice(0,++i);
+      if(i>=TAG.length){clearInterval(id);}
+    },55);
+  }
+})();
+</script>
+</body>
+</html>
