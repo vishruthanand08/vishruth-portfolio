@@ -1,245 +1,153 @@
-"use client";
+import { Row, type RowLogo } from "./Row";
 
-import { motion } from "framer-motion";
-import { useState, useEffect } from "react";
+type Entry = {
+  title: string;
+  sub: string;
+  date: string;
+  logo: RowLogo;
+  bullets: string[];
+  metrics?: { n: string; l: string }[];
+  links?: { label: string; href: string }[];
+};
 
-function useIsMobile() {
-  const [isMobile, setIsMobile] = useState(false);
-  useEffect(() => {
-    const mq = window.matchMedia("(max-width: 640px)");
-    const update = () => setIsMobile(mq.matches);
-    update();
-    mq.addEventListener("change", update);
-    return () => mq.removeEventListener("change", update);
-  }, []);
-  return isMobile;
-}
-
-export default function AdditionalExperience() {
-  const [visible, setVisible] = useState(false);
-  const [typedHeader, setTypedHeader] = useState("");
-  const [showCards, setShowCards] = useState(false);
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const isMobile = useIsMobile();
-
-  useEffect(() => {
-    const handler = () => setVisible(true);
-    window.addEventListener("section:projects-ready", handler);
-    return () => window.removeEventListener("section:projects-ready", handler);
-  }, []);
-
-  useEffect(() => {
-    if (!visible) return;
-    const HEADER = "Additional Experience";
-    let i = 0;
-    const id = setInterval(() => {
-      setTypedHeader(HEADER.slice(0, i + 1));
-      i++;
-      if (i === HEADER.length) {
-        clearInterval(id);
-        setTimeout(() => setShowCards(true), 800);
-        setTimeout(() => {
-          window.dispatchEvent(new Event("section:additional-experience-ready"));
-        }, 800);
-      }
-    }, 90);
-    return () => clearInterval(id);
-  }, [visible]);
-
-  const cards = [
-    {
-      id: 1,
-      title: "Research Intern",
-      org: "KEYS Program, University of Arizona",
-      date: "Summer 2022",
-      bullets: [
-        "Conducted hippocampal subfield analysis on MRI scans of neurotypical and Down syndrome youth using ITK-Snap and R.",
-        "Contributed to a forthcoming publication and presented results at the AZBio Awards, gaining experience in neuroimaging, data analysis, and scientific communication.",
-      ],
-      logo: "/keys.jpeg",
-      links: [
-        { label: "View Poster →", href: "/poster.pdf" },
-        { label: "Watch Video →", href: "https://www.youtube.com/watch?v=Ylt5RcG_9q4" },
-      ],
-    },
-    {
-      id: 2,
-      title: "Workshop Lead & Teaching Assistant",
-      org: "East Valley Yamaha Music School",
-      date: "Jan 2021 – May 2023",
-      bullets: [
-        "Assisted weekly classes and workshops in piano and music theory.",
-        "Helped prepare students for grade exams through guided practice and group sessions.",
-      ],
-      logo: "/yamaha.png",
-    },
-    {
-      id: 3,
-      title: "Teacher & Grader",
-      org: "Best Brains Learning Center",
-      date: "Dec 2021 – Mar 2023",
-      bullets: [
-        "Supported instructors by grading assignments and organizing classroom activities.",
-        "Reinforced lessons in math and English while tracking student progress.",
-      ],
-      logo: "/bb.jpeg",
-    },
-    {
-      id: 4,
-      title: "Peer Tutor",
-      org: "Knack, Georgia Tech",
-      date: "2023 – Present",
-      bullets: [
-        "Tutored undergrads in CS and Math courses including DSA, Linear Algebra, and OOP.",
-        "Completed 300+ hours of one-on-one sessions with 4.98/5 rating.",
-      ],
-      logo: "/knack.png",
-    },
-    {
-      id: 5,
-      title: "Grand Treasurer",
-      org: "Kappa Sigma Fraternity",
-      date: "Nov 2024 – Present",
-      bullets: [
-        "Manage six-figure budgets, dues, and tax filings for 100+ members.",
-        "Develop policies to optimize cash flow and sustain chapter growth.",
-      ],
-      logo: "/kss.png",
-    },
-      {
-    id: 6,
-    title: "Code for Good Hackathon",
-    org: "JPMorgan Chase",
-    date: "Oct 2025",
+const entries: Entry[] = [
+  {
+    title: "WaitWhat",
+    sub: "NexHacks 2026 (2x Winner)",
+    date: "Jan 2026",
+    logo: { src: "/waitwhat.jpeg", alt: "WaitWhat" },
     bullets: [
-      "Engineered a full-stack React + Spring Boot platform for International Girls Academy, transforming their outreach with scalable program management and high-engagement learning tools.",
-
-      "Built secure auth, role-based dashboards, personalized course progression, and interactive modules that significantly improved usability for students and staff.",
-
+      "Built a low-latency AI lecture copilot that streams live microphone audio for real-time transcription and in-class LLM Q&A, generating personalized notes, quizzes, and instructor insights.",
+      "Engineered a full-stack system (React, Node.js, Convex, LiveKit, Gemini) to process long lecture sessions, detect confusion spikes, extract key concepts, and surface engagement trends.",
+      "Designed a transcript chunking + compression pipeline reducing prompt token usage ~70% while preserving real-time responsiveness for extended sessions.",
     ],
-    logo: "/jpm.jpeg",
+    metrics: [{ n: "~70%", l: "Fewer prompt tokens" }],
+    links: [
+      { label: "Devpost →", href: "https://devpost.com/software/wait-what" },
+      { label: "Website →", href: "https://waitwhat.tech" },
+    ],
   },
   {
-  id: 7,
-  title: "WaitWhat",
-  org: "NexHacks 2026 (2x Winner)",
-  date: "Jan 2026",
-  bullets: [
-    "Built a low-latency AI lecture copilot that streams live microphone audio for real-time transcription and in-class LLM Q&A, generating personalized notes, quizzes, and instructor insights.",
-    "Engineered a full-stack system (React, Node.js, Convex, LiveKit, Gemini) to process long lecture sessions, detect confusion spikes, extract key concepts, and surface engagement trends.",
-    "Designed a transcript chunking + compression pipeline reducing prompt token usage ~70% while preserving real-time responsiveness for extended sessions.",
-  ],
-  logo: "/waitwhat.jpeg",
-  links: [
-    { label: "Devpost →", href: "https://devpost.com/software/wait-what" },
-    { label: "Website →", href: "https://waitwhat.tech" },
-  ],
-}
+    title: "Code for Good Hackathon",
+    sub: "JPMorgan Chase",
+    date: "Oct 2025",
+    logo: { src: "/jpm.jpeg", alt: "JPMorgan Chase" },
+    bullets: [
+      "Engineered a full-stack React + Spring Boot platform for International Girls Academy, transforming their outreach with scalable program management and high-engagement learning tools.",
+      "Built secure auth, role-based dashboards, personalized course progression, and interactive modules that significantly improved usability for students and staff.",
+    ],
+  },
+  {
+    title: "Peer Tutor",
+    sub: "Knack, Georgia Tech",
+    date: "2023 – Present",
+    logo: { src: "/knack.png", alt: "Knack" },
+    bullets: [
+      "Tutored undergrads in CS and Math courses including DSA, Linear Algebra, and OOP.",
+      "Completed 300+ hours of one-on-one sessions with 4.98/5 rating.",
+    ],
+    metrics: [
+      { n: "300+", l: "Hours" },
+      { n: "4.98/5", l: "Rating" },
+    ],
+  },
+  {
+    title: "Grand Treasurer",
+    sub: "Kappa Sigma Fraternity",
+    date: "Nov 2024 – Present",
+    logo: { src: "/kss.png", alt: "Kappa Sigma" },
+    bullets: [
+      "Manage six-figure budgets, dues, and tax filings for 100+ members.",
+      "Develop policies to optimize cash flow and sustain chapter growth.",
+    ],
+  },
+  {
+    title: "Research Intern",
+    sub: "KEYS Program, University of Arizona",
+    date: "Summer 2022",
+    logo: { src: "/keys.jpeg", alt: "KEYS Program" },
+    bullets: [
+      "Conducted hippocampal subfield analysis on MRI scans of neurotypical and Down syndrome youth using ITK-Snap and R.",
+      "Contributed to a forthcoming publication and presented results at the AZBio Awards, gaining experience in neuroimaging, data analysis, and scientific communication.",
+    ],
+    links: [
+      { label: "View Poster →", href: "/poster.pdf" },
+      {
+        label: "Watch Video →",
+        href: "https://www.youtube.com/watch?v=Ylt5RcG_9q4",
+      },
+    ],
+  },
+  {
+    title: "Workshop Lead & Teaching Assistant",
+    sub: "East Valley Yamaha Music School",
+    date: "Jan 2021 – May 2023",
+    logo: { src: "/yamaha.png", alt: "Yamaha Music School" },
+    bullets: [
+      "Assisted weekly classes and workshops in piano and music theory.",
+      "Helped prepare students for grade exams through guided practice and group sessions.",
+    ],
+  },
+  {
+    title: "Teacher & Grader",
+    sub: "Best Brains Learning Center",
+    date: "Dec 2021 – Mar 2023",
+    logo: { src: "/bb.jpeg", alt: "Best Brains" },
+    bullets: [
+      "Supported instructors by grading assignments and organizing classroom activities.",
+      "Reinforced lessons in math and English while tracking student progress.",
+    ],
+  },
+];
 
-  ];
-
-  const nextCard = () => {
-    setCurrentIndex((prev) => (prev + 1) % cards.length);
-  };
-
-  const prevCard = () => {
-    setCurrentIndex((prev) => (prev - 1 + cards.length) % cards.length);
-  };
-
-  if (!visible) return null;
-
+export function AdditionalExperience() {
   return (
-    <section
-      id="additional-experience"
-      className="relative flex flex-col items-center justify-center px-4 sm:px-12 py-16 sm:py-24"
-    >
-      <motion.h2
-        className="mb-10 sm:mb-16 text-2xl sm:text-4xl font-bold text-blue-500"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: visible ? 1 : 0 }}
-        transition={{ duration: 0.8 }}
-      >
-        {typedHeader}
-      </motion.h2>
-
-      {showCards && (
-        <motion.div
-          className="relative flex flex-col items-center w-full max-w-[700px] min-h-[700px]"
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1.2, ease: "easeOut" }}
-        >
-          {/* Current card */}
-          <motion.div
-            key={cards[currentIndex].id}
-            className="rounded-2xl border-2 border-purple-500/70 bg-black 
-                       p-6 sm:p-10 shadow-lg text-white 
-                       flex flex-col justify-between h-full
-                       max-sm:w-full max-sm:h-[480px]"
-            initial={{ opacity: 0, x: 100 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -100 }}
-            transition={{ type: "spring", stiffness: 260, damping: 25 }}
-            style={{ width: "100%", maxWidth: 700, minHeight: 600 }}
+    <section className="sec shell" id="additional">
+      <div className="sec__head">
+        <span className="t">Additional Experience</span>
+      </div>
+      <div className="rows">
+        {entries.map((entry, i) => (
+          <Row
+            key={entry.title}
+            index={String(i + 1).padStart(2, "0")}
+            title={entry.title}
+            sub={entry.sub}
+            right={entry.date}
+            logo={entry.logo}
           >
-            <div className="flex flex-col justify-between h-full">
-              <div>
-                <h3 className="text-2xl sm:text-4xl font-bold mb-4 sm:mb-6">
-                  {cards[currentIndex].title}
-                </h3>
-                <p className="text-lg sm:text-xl italic text-blue-300 mb-6 sm:mb-8">
-                  {cards[currentIndex].org} • {cards[currentIndex].date}
-                </p>
-                <ul className="list-disc space-y-2 sm:space-y-4 pl-5 sm:pl-6 text-base sm:text-xl text-gray-200 leading-relaxed">
-                  {cards[currentIndex].bullets.map((b, i) => (
-                    <li key={i}>{b}</li>
-                  ))}
-                </ul>
+            <ul className="bul">
+              {entry.bullets.map((bullet) => (
+                <li key={bullet}>{bullet}</li>
+              ))}
+            </ul>
+            {entry.metrics ? (
+              <div className="metrics">
+                {entry.metrics.map((metric) => (
+                  <span className="metric" key={metric.l}>
+                    <span className="n">{metric.n}</span>
+                    <span className="l">{metric.l}</span>
+                  </span>
+                ))}
               </div>
-              <div className="mt-6 sm:mt-10 flex flex-col items-center justify-center gap-4 sm:gap-6">
-                {cards[currentIndex].logo && (
-                  <img
-                    src={cards[currentIndex].logo}
-                    alt={`${cards[currentIndex].org} logo`}
-                    className="h-20 sm:h-40 w-auto object-contain mx-auto"
-                  />
-                )}
-                {cards[currentIndex].links && (
-                  <div className="flex gap-6 sm:gap-12 flex-wrap justify-center">
-                    {cards[currentIndex].links.map((link, i) => (
-                      <a
-                        key={i}
-                        href={link.href}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-base sm:text-2xl font-bold text-blue-400 hover:text-blue-200 transition"
-                      >
-                        {link.label}
-                      </a>
-                    ))}
-                  </div>
-                )}
+            ) : null}
+            {entry.links ? (
+              <div className="row__foot">
+                {entry.links.map((link) => (
+                  <a
+                    key={link.label}
+                    href={link.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {link.label}
+                  </a>
+                ))}
               </div>
-            </div>
-          </motion.div>
-
-          {/* Arrow Controls */}
-          <div className="flex items-center justify-center gap-12 mt-8">
-            <button
-              onClick={prevCard}
-              className="text-3xl sm:text-5xl text-gray-400 hover:text-blue-400 transition"
-            >
-              ◀
-            </button>
-            <button
-              onClick={nextCard}
-              className="text-3xl sm:text-5xl text-gray-400 hover:text-blue-400 transition"
-            >
-              ▶
-            </button>
-          </div>
-        </motion.div>
-      )}
+            ) : null}
+          </Row>
+        ))}
+      </div>
     </section>
   );
 }
